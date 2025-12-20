@@ -13,7 +13,6 @@
 async function onMocaLoad() {
     // 모든 moca-frame 탐색
     var frames = document.getElementsByTagName('moca-frame');
-
     // HTMLCollection은 live라서 뒤에서부터 처리
     for (var i = frames.length - 1; i >= 0; i--) {
         (async function(frame) {
@@ -21,27 +20,14 @@ async function onMocaLoad() {
             if (!src) return;
             
             // 1) 새 div 생성 (moca-frame을 대체)
-            var div = document.createElement("div");
-            div.style.display = "block";
-            div.style.width = "100%";
-            div.style.height = "100%";
-            div.style.minHeight = "1px";
-            div.style.boxSizing = "border-box";
-            // moca-frame의 속성 복사 (src/type 제외)
-            for (var j = 0; j < frame.attributes.length; j++) {
-              var attr = frame.attributes[j];
-              //if (attr.name === "src" || attr.name === "type") continue;
-              div.setAttribute(attr.name, attr.value);
-            }
-            
+            var div = com.cloneDiv(frame);
         	let doc = await com.getDocAsync(src);
     		let re = doc.body.innerHTML.replace(/moca-grid/g,'div');
     		doc.body.innerHTML = re;
-    		
-    		frame.parentNode.replaceChild(div, frame);
     		div.innerHTML = doc.body.innerHTML;
+    		
     		// 5) 원래 moca-frame 자리에 div로 교체
-    	    
+    	    frame.parentNode.replaceChild(div, frame);
 	  		// 2. script 실행
 	  		const scripts = doc.querySelectorAll("script");
 	  		com.executeScripts(scripts);

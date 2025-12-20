@@ -1,5 +1,20 @@
 
 const com = {
+	cloneDiv(frame) {
+		var div = document.createElement("div");
+		div.style.display = "block";
+		div.style.width = "100%";
+		div.style.height = "100%";
+		div.style.minHeight = "1px";
+		div.style.boxSizing = "border-box";
+		// moca-frame의 속성 복사 (src/type 제외)
+		for (var j = 0; j < frame.attributes.length; j++) {
+		  var attr = frame.attributes[j];
+		  //if (attr.name === "src" || attr.name === "type") continue;
+		  div.setAttribute(attr.name, attr.value);
+		}		
+		return div;
+	},		
 	getDocAsync(src) {
 	    return new Promise(function(resolve, reject) {
 	        com.getDoc(src, null, function(doc) {
