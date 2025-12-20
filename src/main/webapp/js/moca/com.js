@@ -1,6 +1,13 @@
 
 const com = {
-	getMocaSrcHtml(url, params, callbacks = {}){
+	getDocAsync(src) {
+	    return new Promise(function(resolve, reject) {
+	        com.getDoc(src, null, function(doc) {
+	            resolve(doc);
+	        });
+	    });
+	},	
+	getDoc(url, params, callbacks = {}){
 		const xhr = new XMLHttpRequest();
 		const query = new URLSearchParams(params).toString();
 
@@ -15,12 +22,12 @@ const com = {
 			const doc = parser.parseFromString(xhr.responseText, "text/html");
 		    callbacks && callbacks(doc);
 		  } else {
-		    callbacks.error && callbacks.error(xhr, xhr.status, xhr.statusText);
+		    callbacks &&callbacks(xhr, xhr.status, xhr.statusText);
 		  }
 		} catch (e) {
-		  callbacks.error && callbacks.error(xhr, "exception", e);
+		  callbacks && callbacks(xhr, "exception", e);
 		} finally {
-		  callbacks.complete && callbacks.complete(xhr);
+		  callbacks && callbacks(xhr);
 		}
 	},
 	
