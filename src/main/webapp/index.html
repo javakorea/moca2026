@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<link rel="stylesheet" type="text/css" href="/css/moca.css">
+<link rel="stylesheet" type="text/css" href="/css/base.css">
+<script language="JavaScript" src="/js/moca/com.js"></script>
+<script language="JavaScript" src="/js/moca/grid.js"></script>
+<script language="JavaScript" src="/js/data.js"></script>
+<script>
+function onMocaLoad(){
+	com.getMocaSrcHtml("/ui/page001.html",null, function(doc){
+		const right = document.getElementById("right");
+		right.innerHTML = '';
+		let re = doc.body.innerHTML.replace(/moca-grid/g,'div');
+		doc.body.innerHTML = re;
+		right.appendChild(doc.body);
+		  // 2. script 실행
+		  const scripts = doc.querySelectorAll("script");
+		  com.executeScripts(scripts);
+		  // 3. 이제 script 안 함수 사용 가능
+		  if (window.onpageload) {
+		    window.onpageload();
+		  }
+	});
+};
+</script>
+<body onload="onMocaLoad()">
+	<div id="wrap" class="wrap">
+		<div id="header" class="header">
+			<h3>header</h3>
+		</div>
+		<div id ="container" class ="container">
+			<div id="left" class="left">
+				<h3>left</h3>
+			</div>
+			<div id="right" class="right">
+				<div id='main' type="frame" src="/ui/page001.html"></div>
+			</div>
+		</div>
+		<div id="footer" class="footer">
+			<h3>footer</h3>
+		</div>
+	</div>
+</body>
+</html>
