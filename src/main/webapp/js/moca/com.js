@@ -48,21 +48,75 @@ const com = {
 	
 	
 	executeScripts(scripts) {
-		  scripts.forEach(oldScript => {
-		    const script = document.createElement("script");
+	  scripts.forEach(oldScript => {
+	    const script = document.createElement("script");
 
-		    if (oldScript.src) {
-		      // 외부 script
-		      script.src = oldScript.src;
-		    } else {
-		      // 인라인 script
-		      script.textContent = oldScript.textContent;
-		    }
+	    if (oldScript.src) {
+	      // 외부 script
+	      script.src = oldScript.src;
+	    } else {
+	      // 인라인 script
+	      script.textContent = oldScript.textContent;
+	    }
 
-		    document.head.appendChild(script);
-		    script.remove(); // 중복 방지
-		  });
+	    document.head.appendChild(script);
+	    script.remove(); // 중복 방지
+	  });
+	},
+	
+	comma(__num){ 
+      var _num = '';
+      if(__num != null){
+          _num = (__num+'').replace(/,/g,'');
+      }else{
+          _num = '';
+      }
+      try{
+          
+          Number(_num);
+      }catch(e){
+          return _num;
+      }
+      
+      
+      if(_num == null || _num.trim() == ''){
+          _num = '';
+      }
+      if(isNaN(_num+'')){
+          return _num;
+      }
+      var temp = _num+"";
+      var leng = temp.length;
+      var re = '';
+      for(var i=leng-1,j=0; i > -1; i--,j++){
+          if(j !=0 && j%3 == 0){
+              re = temp.charAt(i)+","+re;
+          }else{
+              re = temp.charAt(i)+re;
+          }
+          
+      }
+      return re;
+      
+	},
+	
+	getType (_thisObj) {
+		var _type = null;
+
+		if (_thisObj) {
+		  // jQuery 객체면 DOM으로 변환, 아니면 그대로 사용
+		  var el = _thisObj instanceof Element ? _thisObj : _thisObj[0];
+		  var parent = el?.closest('div[type]');
+		  _type = parent?.getAttribute('type') ?? null;
 		}
-		
+	    return _type;
+	},
+
+	getTypeObj (_thisObj) {
+		if (!_thisObj) return null;
+
+		var el = _thisObj instanceof Element ? _thisObj : _thisObj[0];
+		return el?.closest('div[type]') ?? null;
+	},
 		
 };

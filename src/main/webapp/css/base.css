@@ -2,7 +2,7 @@
 	html, body {height: 100%; margin: 0; }
 	.wrap{min-height: 100vh; display: flex; flex-direction: column;}
 	.header{flex: 0 0 auto; min-height: 64px; background:yellow;}
-	.container{flex: 1 1 auto; display: flex; width: 100%; margin: 0 auto; align-items: stretch;}
+	.container{flex: 1 1 auto; display: flex; width: 100%; margin: 0 auto; align-items: stretch; padding:0;}
 	.left{flex: 0 0 280px;  min-width: 240px; background:violet;}
 	.right{flex: 1 1 auto; min-width: 0;}
 	.footer{flex: 0 0 auto;  min-height: 56px; background:skyblue;}

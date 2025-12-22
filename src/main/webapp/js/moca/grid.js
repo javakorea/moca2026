@@ -3,7 +3,8 @@
 
 
 const gridProto = {
-
+	codeCd : "",
+	codeNm : "",
 	renderGrid() {
 	    ['renderGrid'];
 		let _divObj = this;
@@ -178,19 +179,19 @@ const gridProto = {
 	        _html += '</div>';
 	        _html += '<div class="rta" grdkey="'+_id+'">';
 
-	        if(toolbar_col_showhide == "true") _html += '<button type="button" id="'+_id+'_col_showhide" class="button col_showhide" title="컬럼숨기기" grdkey="'+_id+'" onclick="$m._col_showhide(this)"></button>';
+	        if(toolbar_col_showhide == "true") _html += '<button type="button" id="'+_id+'_col_showhide" class="button col_showhide" title="컬럼숨기기" grdkey="'+_id+'" onclick="'+_id+'_col_showhide(this)"></button>';
 	        
-	        if(toolbar_detail == "true") _html += '<button type="button" id="'+_id+'_btn_detail" class="button grid_detail" title="디테일뷰" grdkey="'+_id+'" onclick="$m._detailview(this)"></button>';
+	        if(toolbar_detail == "true") _html += '<button type="button" id="'+_id+'_btn_detail" class="button grid_detail" title="디테일뷰" grdkey="'+_id+'" onclick="'+_id+'._detailview(this)"></button>';
 	        else if(toolbar_detail == "dblclick") _html += '<button type="button" id="'+_id+'_btn_detail" class="button grid_detail" title="디테일뷰" grdkey="'+_id+'" onclick="'+_onDblClickFunc+'(this)"></button>';
 	        
-	        if(toolbar_exup == "true") _html += '<button type="button" id="'+_id+'_btn_exup" class="button excel_up" title="엑셀업로드" grdkey="'+_id+'" onclick="$m._excel_up(this)"></button>';
-	        if(toolbar_exdn == "true") _html += '<button type="button" id="'+_id+'_btn_exdn" class="button excel_dn" title="엑셀다운로드" grdkey="'+_id+'" onclick="$m._excel_down(this)"></button>';
-	        if(toolbar_addrow == "true") _html += '<button type="button" id="'+_id+'_btn_addrow" class="button add_row" title="행추가" grdkey="'+_id+'" onclick="$m._row_add(this)"></button>';
-	        if(toolbar_delrow == "true") _html += '<button type="button" id="'+_id+'_btn_delrow" class="button del_row" title="행삭제" grdkey="'+_id+'" onclick="$m._row_del(this)"></button>';
-	        if(toolbar_nextbtn == "true") _html += '<button type="button" id="'+_id+'_btn_nextbtn" class="button read_next" title="다음" grdkey="'+_id+'" onclick="$m._next(this)"></button>';
-	        if(toolbar_full == "true") _html += '<button type="button" id="'+_id+'_btn_full" class="button grid_full" title="그리드 전체화면"  grdkey="'+_id+'" onclick="$m._fullScreenGrid(this)"></button>';
+	        if(toolbar_exup == "true") _html += '<button type="button" id="'+_id+'_btn_exup" class="button excel_up" title="엑셀업로드" grdkey="'+_id+'" onclick="'+_id+'._excel_up(this)"></button>';
+	        if(toolbar_exdn == "true") _html += '<button type="button" id="'+_id+'_btn_exdn" class="button excel_dn" title="엑셀다운로드" grdkey="'+_id+'" onclick="'+_id+'._excel_down(this)"></button>';
+	        if(toolbar_addrow == "true") _html += '<button type="button" id="'+_id+'_btn_addrow" class="button add_row" title="행추가" grdkey="'+_id+'" onclick="'+_id+'._row_add(this)"></button>';
+	        if(toolbar_delrow == "true") _html += '<button type="button" id="'+_id+'_btn_delrow" class="button del_row" title="행삭제" grdkey="'+_id+'" onclick="'+_id+'._row_del(this)"></button>';
+	        if(toolbar_nextbtn == "true") _html += '<button type="button" id="'+_id+'_btn_nextbtn" class="button read_next" title="다음" grdkey="'+_id+'" onclick="'+_id+'._next(this)"></button>';
+	        if(toolbar_full == "true") _html += '<button type="button" id="'+_id+'_btn_full" class="button grid_full" title="그리드 전체화면"  grdkey="'+_id+'" onclick="'+_id+'._fullScreenGrid(this)"></button>';
 	        if(toolbar_dblclick == "true") _html += '<button type="button" id="'+_id+'_btn_dblclick" class="button grid_dblclick" title="그리드 더블클릭"  grdkey="'+_id+'" onclick="'+_onDblClickFunc+'(this)"></button>';
-	        if(toolbar_fold == "true") _html += '<button type="button" id="'+_id+'_btn_fold" class="button grid_fold" title="그리드 접기"  grdkey="'+_id+'" onclick="$m._foldGrid(this)"></button>';
+	        if(toolbar_fold == "true") _html += '<button type="button" id="'+_id+'_btn_fold" class="button grid_fold" title="그리드 접기"  grdkey="'+_id+'" onclick="'+_id+'._foldGrid(this)"></button>';
 	        
 	        for(var k=0; k <attArray.length; k++){
 	            var attrName = attArray[k];
@@ -248,7 +249,7 @@ const gridProto = {
 	        _html += '<div class="moca_grid_body" style="right:18px;">';
 	        _html += _header_body;
 	        _html += '</div>';
-	        _html += '<div id="'+_id+'_moca_scroll_y" componentid="'+_id+'" class="moca_scrollY_type1" '+__onclick+' '+__ondblclick+' onscroll="m.sFunction(this);" style="'+__swipeStyle+'">';
+	        _html += '<div id="'+_id+'_moca_scroll_y" componentid="'+_id+'" class="moca_scrollY_type1" '+__onclick+' '+__ondblclick+' onscroll="'+_id+'.sFunction(this);" style="'+__swipeStyle+'">';
 	        _html += '<div id="'+_id+'_grid_height" style="height: 0px; position: absolute; top: 0px; left: 0px; width: 18px;"></div>';
 	        _html += '</div>';
 	        _html += '<div id="lin_dashed" style="position:absolute; top:0px; bottom:0px; border-left:1px dashed #000; z-index:100; height:100%; left:340px;display:none"></div>';
@@ -1001,7 +1002,7 @@ const gridProto = {
        _grd.list = _list;
        if(_grd.list != null){
        	if(this.getAttrObj(_grd,'paging').type != 'numberList'){
-       		this.setTotalCnt(_grd,this.comma(_grd.list.length));
+       		this.setTotalCnt(_grd,com.comma(_grd.list.length));
        	}else if(_response != null){
    			var _totalCnt =_response[this.getAttrObj(_grd,'paging').totalCntKey];
        		this.setTotalCnt(_grd,_totalCnt);
@@ -1049,7 +1050,7 @@ const gridProto = {
                                val = m[key];
                            }
                            var reKey = "("+val+"건)"+" "+key;
-                           jq_grd_2[tdId]['countableMap'][reKey] = key+" "+"("+$m.comma(val)+"건)";
+                           jq_grd_2[tdId]['countableMap'][reKey] = key+" "+"("+com.comma(val)+"건)";
                        }
                        //jq_grd_2[tdId]['countableMap'] = $m.sortObjectNumString(jq_grd_2[tdId]['countableMap']);
                        var keys = Object.keys(jq_grd_2[tdId]['countableMap']);
@@ -1081,7 +1082,7 @@ const gridProto = {
                        val = m[key];
                    }
                    
-                   jq_grd_2[tdId]['filterableMap'][key] = (j+1)+"."+key+" "+"("+$m.comma(val)+"건)";
+                   jq_grd_2[tdId]['filterableMap'][key] = (j+1)+"."+key+" "+"("+com.comma(val)+"건)";
                }
                
 			   jq_grd_2.querySelectorAll(`.itemTable[thid="${CSS.escape(thId)}"]`).forEach(el => el.remove());
@@ -1299,7 +1300,7 @@ const gridProto = {
          this.pageId = grd.getAttribute("pageId");
          this.srcId = grd.getAttribute("srcid");
 
-         m.wFunction(m.getObj(_grd.id + "_moca_scroll_y"));
+         this.wFunction(this.getObj(_grd.id + "_moca_scroll_y"));
        }, { passive: true });
 
        // mousemove(table)
@@ -1458,13 +1459,13 @@ const gridProto = {
              var _allOpt;
              if (codeOpt != null) _allOpt = codeOpt.allOption;
 
-             _grd[_id]["map"] = $m.listToMap(arr, codeOpt);
+             _grd[_id]["map"] = this.listToMap(arr, codeOpt);
 
              var _metaInfo;
              if (codeOpt != null) _metaInfo = codeOpt.metaInfo;
 
-             var _codeCd = $m.codeCd;
-             var _codeNm = $m.codeNm;
+             var _codeCd = this.codeCd;
+             var _codeNm = this.codeNm;
              if (_metaInfo != null) {
                _codeCd = _metaInfo.codeCd;
                _codeNm = _metaInfo.codeNm;
@@ -1481,7 +1482,7 @@ const gridProto = {
                } else {
                  _reLabel = _allOpt.label;
                }
-               selectTag = '<input type="text" class="moca_select" style="background-color:pink" readonly value="' + _reLabel + '" onfocus="$m.openSelect(this)" >';
+               selectTag = '<input type="text" class="moca_select" style="background-color:pink" readonly value="' + _reLabel + '" onfocus="'+_id+'.openSelect(this)" >';
                cd = _allOpt.value;
                nm = _allOpt.label;
                label = _reLabel;
@@ -1503,7 +1504,7 @@ const gridProto = {
 
                if (cell == aData[_codeCd]) {
                  selectFlag = true;
-                 selectTag = $m.getInputSelectTag(_reLabel2, _required);
+                 selectTag = this.getInputSelectTag(_reLabel2, _required);
                  cd = _cd;
                  nm = _nm;
                  label = _reLabel2;
@@ -1523,7 +1524,7 @@ const gridProto = {
              if (readOnly == "true") {
                row += label;
              } else {
-               row += $m.getSelectDivTagForCombo(label, _required, cd, nm, ch);
+               row += this.getSelectDivTagForCombo(label, _required, cd, nm, ch);
                row += selectTag;
              }
            }
@@ -1761,7 +1762,7 @@ const gridProto = {
              _inTag6 += "</div>";
            }
 
-           row += '<td id="' + _id + '" class="' + _class + '" name="' + _name + '"  toolTip="' + _toolTip + '" celltype="' + _celltype + '" style="' + _style + '"  readOnly="' + readOnly + '" disabledFunction="' + _disabledFunction + '" onclick="$m.defaultCellClick(this);" >' + _inTag6 + "</td>";
+           row += '<td id="' + _id + '" class="' + _class + '" name="' + _name + '"  toolTip="' + _toolTip + '" celltype="' + _celltype + '" style="' + _style + '"  readOnly="' + readOnly + '" disabledFunction="' + _disabledFunction + '" onclick="'+_id+'.defaultCellClick(this);" >' + _inTag6 + "</td>";
          }
        }
      }
@@ -1770,7 +1771,7 @@ const gridProto = {
      return row;
    },
 	
-   _setRowSelection(grd,_tdObj){ 
+   _setRowSelection (grd,_tdObj){ 
        ['row select 표시'];
 	   var _realIndex = grd.getAttribute("selectedRealRowIndex");
 
@@ -1810,7 +1811,7 @@ const gridProto = {
 
    },
    
-   setTotalCnt(_grd,cnt){
+   setTotalCnt (_grd,cnt){
           var grd;
           if(typeof _grd == 'string'){
               grd = this.getObj(_grd,null,this.pageId,this.srcId);
@@ -1823,47 +1824,12 @@ const gridProto = {
           }*/
 		  const el = grd.querySelector('.grid_total .txt_blue');
 		  if (el) {
-		    el.innerHTML = this.comma(cnt);
+		    el.innerHTML = com.comma(cnt);
 		  }
    },
 	  
-	  comma(__num){ 
-	      var _num = '';
-	      if(__num != null){
-	          _num = (__num+'').replace(/,/g,'');
-	      }else{
-	          _num = '';
-	      }
-	      try{
-	          
-	          Number(_num);
-	      }catch(e){
-	          return _num;
-	      }
-	      
-	      
-	      if(_num == null || _num.trim() == ''){
-	          _num = '';
-	      }
-	      if(isNaN(_num+'')){
-	          return _num;
-	      }
-	      var temp = _num+"";
-	      var leng = temp.length;
-	      var re = '';
-	      for(var i=leng-1,j=0; i > -1; i--,j++){
-	          if(j !=0 && j%3 == 0){
-	              re = temp.charAt(i)+","+re;
-	          }else{
-	              re = temp.charAt(i)+re;
-	          }
-	          
-	      }
-	      return re;
-	      
-	  },
 	  
-	  setVirtualScroll(_grd){
+	setVirtualScroll (_grd){
 	    var _default_cell_height = this.getCellHeight(_grd);
 
 		// thead 높이
@@ -1887,7 +1853,7 @@ const gridProto = {
 
 	},
 	
-	sFunction(yscroll) { 
+	sFunction (yscroll) { 
 	    if(yscroll==null){
 	        return;
 	    }
@@ -1943,7 +1909,7 @@ const gridProto = {
 
 	},  
 	
-	wFunction(yscroll) {
+	wFunction (yscroll) {
 	    //var _grd = document.getElementById(yscroll.getAttribute("componentid"));
 	    
 	    var _grd = this.getObj(yscroll.getAttribute("componentid"));
@@ -1964,13 +1930,493 @@ const gridProto = {
 	/*
 	 * getDevice
 	 */
-	getDevice(){
+	getDevice (){
 	    ['toSingleMdi']; 
 	    var sw = screen.width;
 		var _m = 'pc';
 		(sw < 1280)?_m="mobile":_m = "pc";
 		return _m;
-	}
+	},
+	
+	fn_display_rownum (_value,_grd,_rowIndex){ 
+	    ['순번 '];
+	    return com.comma(Number(_rowIndex)+1)+"";
+	},
+	
+	listToMap (_list,_option,filterableId) {
+	    var re = {};
+	    if(_option != null){
+	        var _code = '';
+	        var _name = '';
+	        if(_option.metaInfo != null){
+	            _code = _option.metaInfo.codeCd;
+	            _name = _option.metaInfo.codeNm;
+	        }
+	        for(var i=0,j=_list.length; i < j; i++){
+	            var row = _list[i];
+	            if(_code == ''){
+	                re[row.code] = row.codeNm;
+	            }else{
+	                re[row[_code]] = row[_name];
+	            }
+	        }
+	    }else{
+	        for(var i=0,j=_list.length; i < j; i++){
+	            var row = _list[i];
+	            var value = row[filterableId];
+	            re[value] = value;
+	        }
+	    }
+
+	    return re;
+	},
+	
+	//태그정의
+	getInputSelectTag (_label,_req){
+	    ['getInputSelectTag for grid cell'];
+	    if(_req == "true"){
+	        _req = "req";
+	    }else{
+	        _req = "";  
+	    }
+	    var selectTag = '<input type="text" class="moca_select '+_req+'" readonly value="'+_label+'" onclick="'+_id+'.openSelect(this)" >';//onfocus="$m._evt_selectFocus(this)"
+	    return selectTag;
+	},
+
+	_detailView1 (_thisObj) {
+	    var _type = $m.getType(_thisObj); 
+	    var grd = $m.getTypeObj(_thisObj);
+	    $m._detailViewContentCopy(_thisObj);
+	    grd.attr('selectedDetailView',1);
+	    var selectedRealRowIndex = grd.getAttribute("selectedRealRowIndex");
+	    if(selectedRealRowIndex != null){
+	        var foundedRow = grd.find('tbody:first>tr[realrowindex='+selectedRealRowIndex+']');
+	        var tdArr = foundedRow.find('td');
+	        $m.removeCol(tdArr);
+	        var _html = '';
+	        for(var i=0;i < tdArr.length; i++){
+	            var aTd = tdArr[i];
+	            _html +='           <tr realrowindex='+selectedRealRowIndex+'> ';
+	            _html += $m._detailViewMakeTd(aTd);
+	            _html +='           </tr> ';
+	        }
+	        
+	        grd.find('#gridDetail2').html('');
+	        grd.find('#gridDetail3').html('');
+	        grd.find('#gridDetail1').html(_html);
+	        $(_thisObj).closest("div[type="+_type+"]").find(".gridDetail_body").css('display','block'); 
+	    }else{
+	        $m.alert("상세보기할 행을 선택하세요!");
+	    }
+
+	},
+	_detailView2 (_thisObj) {
+	    var _type = $m.getType(_thisObj); 
+	    var grd = $m.getTypeObj(_thisObj);
+	    $m._detailViewContentCopy(_thisObj);
+	    grd.attr('selectedDetailView',2);
+	    
+	    var selectedRealRowIndex = grd.getAttribute("selectedRealRowIndex");
+	    var foundedRow = grd.find('tbody:first>tr[realrowindex='+selectedRealRowIndex+']');
+	    var tdArr = foundedRow.find('td');
+	    $m.removeCol(tdArr);
+	    var _html = '';
+	    
+	    for(var i=0;i < tdArr.length;){
+	        _html +='           <tr realrowindex='+selectedRealRowIndex+'> ';
+	        
+	        var aTd = tdArr[i];
+	        _html += $m._detailViewMakeTd(aTd);
+	        if(i+1 < tdArr.length){
+	            var aTd = tdArr[i+1];
+
+	            _html += $m._detailViewMakeTd(aTd);
+	        }else{
+	            _html +='               <th><label></label></th> ';
+	            _html +='               <td></td> ';
+	        }
+	        _html +='           </tr> ';
+	        i = i+2;
+	    }
+	    grd.find('#gridDetail1').html('');
+	    grd.find('#gridDetail3').html('');  
+	    grd.find('#gridDetail2').html(_html);
+	    $(_thisObj).closest("div[type="+_type+"]").find(".gridDetail_body").css('display','block'); 
+	},
+	
+	_detailView3 (_thisObj) {
+	    var _type = $m.getType(_thisObj); 
+	    var grd = $m.getTypeObj(_thisObj);
+	    $m._detailViewContentCopy(_thisObj);
+	    grd.attr('selectedDetailView',3);
+	    var selectedRealRowIndex = grd.getAttribute("selectedRealRowIndex");
+	    var foundedRow = grd.find('tbody:first>tr[realrowindex='+selectedRealRowIndex+']');
+	    var tdArr = foundedRow.find('td');
+	    $m.removeCol(tdArr);
+	    var _html = '';
+	    for(var i=0;i < tdArr.length;){
+	        _html +='           <tr realrowindex='+selectedRealRowIndex+'> ';
+	        
+	        var aTd = tdArr[i];
+	        _html += $m._detailViewMakeTd(aTd);
+	        i = i+1;
+	        if(i < tdArr.length){
+	            var aTd = tdArr[i];
+	            _html += $m._detailViewMakeTd(aTd);
+	        }else{
+	            _html +='               <th><label></label></th> ';
+	            _html +='               <td></td> ';
+	            _html +='               <th><label></label></th> ';
+	            _html +='               <td></td> ';    
+	            break;
+	        }
+	        i = i+1;
+	        if(i < tdArr.length){
+	                var aTd = tdArr[i];
+	                _html += $m._detailViewMakeTd(aTd);
+	        }else{
+	            _html +='               <th><label></label></th> ';
+	            _html +='               <td></td> ';
+	            break;
+	        }
+	        _html +='           </tr> ';
+	        i = i+1;
+	    }
+	    grd.find('#gridDetail1').html('');
+	    grd.find('#gridDetail2').html('');      
+	    grd.find('#gridDetail3').html(_html);
+	    $(_thisObj).closest("div[type="+_type+"]").find(".gridDetail_body").css('display','block');     
+	    
+	},
+	
+	openSelect (_thisObj){
+	    ['grid cell selectbox동적열기'];
+	    var grd = _thisObj.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
+	    var cellTd = _thisObj.parentElement.parentElement;
+	    var _displayFormat = cellTd.getAttribute("displayFormat");
+	    var _displayFunction = cellTd.getAttribute("displayFunction");
+	    
+	    var colid = _thisObj.parentElement.parentElement.id;
+	    
+	    var _tbody = $(_thisObj).parent().parent().parent().parent();
+	    var _thisTr = $(_thisObj).parent().parent().parent();
+	    var rowIndex = _tbody.children().index(_thisTr);
+	    
+	    var _index = rowIndex;
+	    var _realIndex = -1;
+	    var _startIndex = grd.getAttribute("yscrollIdx");
+	    if(_startIndex > -1){
+	        _realIndex = rowIndex +parseInt(_startIndex);
+	    }
+	    grd.setAttribute("selectedRealRowIndex",_realIndex);
+	    //grd.setAttribute("selectedRowIndex",rowIndex);
+	    
+	    
+	    var realRowIndex = grd.getAttribute("selectedRealRowIndex");
+	    //var rowIndex = grd.getAttribute("selectedRowIndex");
+	    //var rowIndex = $(_thisObj).parent().children().index($(_thisObj));
+	    var combo_div = _thisObj.parentElement;
+	    var _html = '';
+	    _html += $m.getSelectTagForCombo(grd.id); 
+	    
+	    var selectList = grd[_thisObj.parentElement.parentElement.id];
+	    var list = selectList.list;
+	    var codeOpt = selectList.codeOpt;
+	    var _metaInfo = codeOpt.metaInfo;
+	    var _codeCd = $m.codeCd;
+	    var _codeNm = $m.codeNm;
+	    if(_metaInfo != null){
+	        _codeCd = _metaInfo.codeCd;
+	        _codeNm = _metaInfo.codeNm;
+	    }
+	    var thiscd = _thisObj.parentElement.getAttribute("cd");
+	    
+	    if(codeOpt.allOption != null){
+	        var nm = codeOpt.allOption.label;
+	        var cd = codeOpt.allOption.value;
+	        var label;
+	        if(_displayFormat != null && _displayFormat != 'null' && _allOpt != null && _allOpt.value != ''){
+	            label = _displayFormat.replace('[value]',cd).replace('[label]',nm);
+	        }else{
+	            label = nm;
+	        }
+	        
+	        var _selected = "";
+	        if(thiscd == cd){
+	            _selected = "selected";
+	        }       
+	        _html += '<option value="'+cd+'" '+_selected+'>'+label+'</option>';
+	    }
+	    
+	    for(var i=0; i < list.length; i++){
+	        var json = list[i];
+	        
+	        var label;
+	        if(_displayFormat != null && _displayFormat != 'null' && json[_codeCd] != ''){
+	            label = _displayFormat.replace('[value]',json[_codeCd]).replace('[label]',json[_codeNm]);
+	        }else{
+	            label = json[_codeNm];
+	        }
+	        var _selected = "";
+	        if(thiscd == json[_codeCd]){
+	            _selected = "selected";
+	        }
+	        _html += '<option value="'+json[_codeCd]+'" '+_selected+'>'+label+'</option>';
+	    }
+	    _html += '</select>';
+	    combo_div.innerHTML = _html;
+	    $m.setCellData(grd,realRowIndex,colid,combo_div.children[0].value);
+	    $m._selectFocus(combo_div);
+	},
+	getSelectDivTagForCombo (_label,_req,_cd,_nm,_height){
+	    ['getSelectDivTagForCombo for grid cell'];
+	    if(_req == "true"){
+	        _req = "req";
+	    }else{
+	        _req = "";  
+	    }   
+	    var combo_div = '<div class="moca_combo '+_req+'" style="height:'+_height+'px" cd="'+_cd+'" nm="'+_nm+'" label="'+_label+'">';
+	    return combo_div;
+	},
+	
+	_excel_down (_thisObj) {
+	    ['Ajax버전의 파일다운로드 함수'];
+	    var _type = com.getType(_thisObj)
+	    var grd = com.getTypeObj(_thisObj)
+	    var cellInfo = {};
+	    var ks = Object.keys(grd.cellInfo);
+	    var _keyNmArr =[];
+	    for(var i=0,j=ks.length;i < j; i++){
+	        var key = ks[i];
+	        var cellTd = grd.cellInfo[key];
+	        if(cellTd.getAttribute("excelIndex")){
+	        	if(cellTd.getAttribute("celltype")=="select" && grd.getAttribute("exdn_withLabel") != 'false'){
+	        		var _keynm = key+"_nm";
+	        		cellInfo[key] = cellTd.getAttribute("name");
+	        		var _keyJson = {
+	        			"_keycd":key,
+	        			"_keynm":cellTd.getAttribute("name")+"_NAME"
+	        		};
+	        		_keyNmArr.push(_keyJson);
+	        	}else{
+	        		 cellInfo[key] = cellTd.getAttribute("name");
+	        	}
+	        }
+	    }
+	    for(var k=0;k<_keyNmArr.length;k++){
+	    	var _label = _keyNmArr[k]._keycd+"_nm";
+	    	cellInfo[_label] = _keyNmArr[k]._keynm;
+	    }
+	   
+	    
+	    var aTd;
+	    var _nm;
+	    var _cd;
+	    var _selectArr = [];
+	    for(var bb=0; bb<ks.length; bb++){
+	    	aTd = grd.cellInfo[ks[bb]];
+	    	if(aTd.getAttribute("celltype") == "select"){
+	    		_selectArr.push(aTd);
+	    	}
+	    }
+	    if(_selectArr.length > 0 && grd.getAttribute("exdn_withLabel") != 'false'){
+	    	grd.excelList = [...grd.list];
+	    	 for(var i = 0; i<grd.excelList.length;i++){
+	    		 for(var ii=0; ii<_selectArr.length; ii++){
+	    			 aTd = _selectArr[ii];
+	    			 _cd = grd.excelList[i][aTd.id];
+	    	 		 var _idnm = aTd.id+"_nm";
+	    	         var codeOpt = grd[aTd.id].codeOpt;
+	    	         _nm = grd[aTd.id]["map"][_cd];
+	    	         grd.excelList[i][_idnm]=_nm;
+	    		 }
+	    		
+	    	 }
+	    }
+	   
+	    var list = [...grd.list];
+	    if(grd.excelList != null){
+	    	list = grd.excelList;
+	    }
+	    if(list.length == 0){
+	    	 $m.alert("다운로드할 데이터가 없습니다.");
+	    	 return;
+	    }
+	    var _parammap = {};
+	    _parammap['cellInfo'] = cellInfo;
+	    _parammap['list'] = list;
+	    
+	    var array = list;
+	    var str = '';
+	    var line_h = '';
+	    function escapeVal(v) {
+	        return '"' + v.replace('"', '""') + '"';
+	    }
+	    for (var hkey in cellInfo) {
+	        var v = cellInfo[hkey]+"";
+	        if(v == null || v == 'null'){
+	            v = "";
+	        }
+	        line_h += v + ",";
+	    }
+	    line_h.slice(0,line_h.Length-1);
+	    str += line_h + '\r\n';
+	    
+	    for (var i = 0; i < array.length; i++) {
+	                var line = '';
+	                
+	                for (var hkey in cellInfo) {
+	                    var v = array[i][hkey]+"";
+	                    
+	                    if(v == null || v == 'null' || v == 'undefined'){
+	                        v = "";
+	                    }else{
+	                        if(v.length == 13 && $.isNumeric(v) && hkey != "FILE_ID"){
+	                            v = $m.longToDate(v);
+	                        }else if(hkey == "FILE_ID"){
+	                            v = ""+v+"_";
+	                        }
+	                        v = escapeVal(v);
+	                    }
+	                    line += v + ",";
+	                }
+	                
+	                line.slice(0,line.Length-1);
+	                str += line + '\r\n';
+	    }
+	    var ReportTitle= grd.getAttribute('label');
+	    var fileName = grd.closest('.moca_tab_panel')?.find('#sreenNm').text()+"_"||"";
+	    fileName += ReportTitle.replace(/ /g,"_");   
+	    fileName = fileName + ".csv";
+
+
+	    if(navigator.appVersion.toString().indexOf('.NET') > 0){
+	        var xData = new Blob(["\ufeff"+str], { type: 'text/csv' });
+	        window.navigator.msSaveBlob(xData,fileName);
+	    }else{
+	        var xData = new Blob(["\ufeff"+str], { type: 'text/csv' });
+	        var uri = window.URL.createObjectURL(xData);
+
+	        var link = document.createElement("a");    
+	        link.href = uri;
+	        link.style = "visibility:hidden";
+	        link.download = fileName;
+	        document.body.appendChild(link);
+	        link.click();
+	        document.body.removeChild(link);
+	    }
+	    
+
+	/*
+	    var downloadUrl = "/efms/EFL_CAFL/exceldownload.do";
+	    
+	    var xhttp = new XMLHttpRequest();
+	    var loadingId = $m.loading();
+	    
+	    xhttp.onreadystatechange = function(){
+	        
+	        if(xhttp.readyState == 4 && xhttp.status == 200){
+	            $m.loading(loadingId,0);
+	            var cd = xhttp.getResponseHeader('content-disposition');
+	            var ar = cd.split(';');
+	            var fNameParam = ar[1];
+	            var ar2 = fNameParam.split('=');
+	            var fileName = ar2[1];
+	            var _fileName = decodeURIComponent(fileName);
+	            fileName = _fileName.replace(/\"/g,'');
+	            if($m.isChrome()){
+	                var a = document.createElement('a');
+	                a.id = 'tmpDownload';
+	                a.href = window.URL.createObjectURL(xhttp.response);
+	                a.download = fileName;
+	                a.style.display = 'none';
+	                document.body.appendChild(a);
+	                a.click();
+	            }else{
+	                window.navigator.msSaveOrOpenBlob(xhttp.response,_fileName);
+	            }
+
+	        }else if(xhttp.readyState == 4 && xhttp.status == 500){
+	            $m.loading(loadingId,0);
+	            var blob = new Blob([this.response],{type:'application/json'});
+	            var fileReader = new window.FileReader();
+	            fileReader.readAsText(blob);
+	            fileReader.onloadend = function(){
+	                var msg = JSON.parse(fileReader.result)['msg'];
+	                alert(msg);
+	                return false;
+	            }
+	            //{"statCd":-1,"msg":"파일이 존재하지 않습니다.","reason":"Internal Server Error","path":"/co/coc/FileUpload/downloadFile.do","locale":"ko"}
+	        }
+	    };
+	    xhttp.onerror = function(){
+	    };
+	    xhttp.open("POST",downloadUrl);
+	    //xhttp.setRequestHeader("Content-Type","application/json;charset=UTF-8");
+	    xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	    xhttp.responseType = 'blob';
+	    setTimeout(function(){
+	        if(typeof _parammap == 'object'){
+	            xhttp.send("body="+JSON.stringify(_parammap)+"&header="+JSON.stringify({TRANID:"TRAN_"+$m.now()+$m.shuffleRandom(6)}));
+	        }else{
+	            xhttp.send(_parammap);
+	        }
+	    },1000);
+	*/
+	},
+
+	_fullScreenGrid(_thisObj){
+		var _pageid = _thisObj.getAttribute("pageid");
+		var _srcid  = _thisObj.getAttribute("srcid");
+
+		var g = _thisObj.parentElement?.parentElement?.parentElement; // 원래대로 3단계 위
+		var fs = _thisObj.getAttribute("full_screen");
+
+		if (g) {
+		  if (fs == null || fs === "false") {
+		    _thisObj.setAttribute("full_screen", "true");
+
+		    var _height = getComputedStyle(g).height;
+
+		    g.height = _height; // DOM 커스텀 프로퍼티로 저장(원본 동작 유지)
+
+		    g.classList.add("overlayer");
+
+		    _thisObj.classList.remove("grid_full");
+		    _thisObj.classList.add("grid_default");
+
+		    g.style.height = "";
+		  } else {
+		    _thisObj.setAttribute("full_screen", "false");
+
+		    g.classList.remove("overlayer");
+
+		    _thisObj.classList.remove("grid_default");
+		    _thisObj.classList.add("grid_full");
+
+		    if (g.height != null) {
+		      g.style.height = g.height; // 원래 저장해둔 height 복원
+		    }
+		  }
+		}
+
+		// ----- scrollY 객체 찾기 (jQuery selector 대체) -----
+		var grdkey = _thisObj.getAttribute("grdkey");
+
+		// 원래 selector:
+		// $('.moca_scrollY_type1[id='+grdkey+'_moca_scroll_y][pageid='+_pageid+'][srcid='+_srcid+']')
+		var sel =
+		  `.moca_scrollY_type1` +
+		  `[id="${CSS.escape(grdkey + '_moca_scroll_y')}"]` +
+		  `[pageid="${CSS.escape(_pageid || '')}"]` +
+		  `[srcid="${CSS.escape(_srcid || '')}"]`;
+
+		var yscrollObj = document.querySelector(sel);
+
+		this.sFunction(yscrollObj);
+
+	},
+
 }
 
 
