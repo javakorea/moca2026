@@ -118,5 +118,449 @@ const com = {
 		var el = _thisObj instanceof Element ? _thisObj : _thisObj[0];
 		return el?.closest('div[type]') ?? null;
 	},
+	
+	getDevice (){
+	    ['toSingleMdi']; 
+	    var sw = screen.width;
+		var _m = 'pc';
+		(sw < 1280)?_m="mobile":_m = "pc";
+		return _m;
+	},
+	
+	setValue (__comp,__value,_keyMask){
+	    var _value;
+	    var _comp;
+	    _comp = __comp;
+	    if(__comp != null && __value == null){ 
+	        _value = __comp.value.trim();
+	    }else{
+	        _value = __value;   
+	    }
+		
+		_type = _comp.getAttribute('type');
+		_compType = _comp.getAttribute('compType');
+	    if('inputCalendar' == _type || 'inputCalendar' == _compType){
+	        var v = $m.getDisplayFormat_value(_comp,_value);
+	        
+	        if(_comp != null && _comp.tagName == 'INPUT'){
+	        	_comp.value = v;
+	        }else{
+	        	_comp.querySelector('input[type="text"]').value = v;
+	        }
+	        
+	        var df = _comp.getAttribute('displayFunction');
+	        
+	        if(df){
+	            var reValue='';
+	            try{
+	                reValue = eval(df)(_value);
+	            }catch(e){
+	                reValue = _value;
+	            }
+	            if(_comp.tagName == 'INPUT'){
+					_comp.value = _comp.value = v;;
+	            }else{
+					_comp.querySelector('input[type="text"]').value = reValue;
+	            }
+	        }
+	    }else if('combo' == _type || 'combo' == _compType){
+	        var v = $m.getDisplayFormat_value(_comp,_value);
+	        try{
+		        if($(_comp).attr('readonly')){
+		        	if($m.trim(v) != '' && _comp.codeToDispLabelMap[v] != null &&_comp.codeToDispLabelMap[v].length > 0){
+		        		_comp.setAttribute('code', v);
+						_comp.setAttribute('label', _comp.codeToLabelMap[v]);
+		        		$(_comp).find('input[type=text]').val(_comp.codeToDispLabelMap[v]);
+		        	}
+		        }else{
+		        	$(_comp).find('select>option[value="'+_value+'"]').prop("selected",true);
+		        }
+	        }catch(e){
+	            console.log(e);
+	        }
+	    }else if('searchCombo' == _type){
+	        var v = _comp.codeToDispLabelMap[_value];
+	        try{
+	            $(_comp).attr('value',_value);
+	            $(_comp).attr('text',v);
+	            var ipt = $(_comp).find('.moca_input');
+	            ipt.val(v);
+	        }catch(e){
+	            console.log(e);
+	        }       
+	    }else if('radio' == _type || 'radio' == _compType){
+	        __value = $m.trim(__value);
+	        $(_comp).find('input[value='+__value+']').prop('checked', true); 
+	    }else if('color' == _type || 'color' == _compType){
+	    	_value = String(_value);
+	    	//$(_comp).find('input[type=color]').val(_value);
+	    	$(_comp).val(_value);
+	    	
+	    }else{
+	    	var df =  _comp.getAttribute('displayFunction');
+			// 1) 모바일 + INPUT이면 grid 스크롤Y 표시
+			if (_comp && _comp.tagName === 'INPUT' && this.getDevice() === 'mobile') {
+			  var _grd = _comp.closest('div[type="grid"]');
+			  if (_grd) {
+			    var _scrollY = _grd.querySelector('#' + CSS.escape(_grd.id + '_moca_scroll_y'));
+			    if (_scrollY) {
+			      // jQuery :visible 대체
+			      var isVisible = !!(_scrollY.offsetWidth || _scrollY.offsetHeight || _scrollY.getClientRects().length);
+			      if (!isVisible) {
+			        _scrollY.style.display = 'block';
+			      }
+			    }
+			  }
+			}
+
+			// 2) _type이 input이면 내부 input[type=text]로 대상 변경
+			if (_type === 'input') {
+			  var innerInput = _comp ? _comp.querySelector('input[type="text"]') : null;
+			  if (innerInput) _comp = innerInput;
+			}
+
+			// 3) df 처리
+			if (df === 'null') df = '';
+			df = String(df);
+
+			var reValue = '';
+			if (df.trim() !== '') {
+			  try {
+			    var parent = _comp ? _comp.parentElement : null;
+
+			    if (parent && parent.displayChar != null) {
+			      _value = String(_value).replaceAll(parent.displayChar, '');
+			    } else {
+			      _value = String(_value);
+			    }
+
+			    reValue = eval(df)(_value);
+
+			    if (String(reValue).length < String(_value).length) {
+			      reValue = _value;
+			    }
+			  } catch (e) {
+			    reValue = _value;
+			  }
+			} else {
+			  reValue = _value;
+			}
+
+			reValue = String(reValue);
+			_value = String(_value);
+
+			if (reValue.length !== _value.length) {
+			  for (var k = 0; k < reValue.length; k++) {
+			    var aChar = reValue.charAt(k);
+			    var reValue2 = reValue.replaceAll(aChar, '');
+			    if (reValue2 === _value) {
+			      var parent2 = _comp ? _comp.parentElement : null;
+			      if (parent2) {
+			        parent2.displayChar = aChar;
+			        break;
+			      }
+			    }
+			  }
+			}
+			if (_comp && _comp.tagName === 'INPUT') {
+			  var parent3 = _comp.parentElement;
+			  if (parent3) {
+			    parent3.originalValue = _value.trim();
+			  }
+
+			  var masked = this.displayKeyMask(reValue, _keyMask);
+
+			  // jQuery: attr('value', ..) + val(..) 동시 세팅과 동일하게
+			  _comp.setAttribute('value', masked); // attribute
+			  _comp.value = masked;                // property (현재값)
+
+			} else {
+			  // jQuery: $(_comp).find('input[type=text]').val(reValue);
+			  if (_comp) {
+			    var input2 = _comp.querySelector('input[type="text"]');
+			    if (input2) input2.value = reValue;
+			  }
+			}
+		}
+	},
+	
+	displayKeyMask (_value,_keyMask){
+	    if(_keyMask != null && _keyMask.indexOf('onlyNumber') > -1){
+	        return _value.replace(/-/g,'');
+	    }else{
+	        return _value;
+	    }
+	},
+	
+	//addEvent="enterSearchEvt|onlyMoneyEvt"
+	keydown (_comp,_value,_keyMask){
+	    var keyMask = _keyMask.trim();
+	    if(event.key == 'Enter'){
+	    	this.setValue(_comp,_value);
+	        if(keyMask.indexOf('enterSearch') > -1){
+	            $m.default_keyup(event.srcElement);
+	        }else{
+	            _comp.blur();
+	            if($(_comp).closest('td').next().length > 0){
+	                $(_comp).closest('td').next().find('input').focus().select();
+	            }else{
+	                $(_comp).closest('tr').next().find('td:nth(0) input').focus().select();
+	            }
+	        }
+	    }else{
+	        //자연수
+	        if(keyMask.indexOf('onlyNumber') > -1){
+	            if($m.isBasisKey(event.keyCode)){
+	                return true;
+	            }else if(event.keyCode == 188){ 
+	                //(,)쉼표차단
+	                event.preventDefault();return false;
+	            }else if(event.shiftKey && event.keyCode > 47 && event.keyCode < 58){   
+	                //특수문자차단
+	                event.preventDefault();return false;    
+	            }else if(event.keyCode > 47 && event.keyCode < 58){
+	                //숫자 허용
+	                return true;
+	            }else if(event.keyCode > 95 && event.keyCode < 106){
+	                //키패드숫자 허용
+	                return true;        
+	            }else if(event.keyCode == 109 || event.keyCode == 189){ 
+	                //마이너스(-) 차단
+	                event.preventDefault();return false;    
+	            }else if(event.keyCode == 110 || event.keyCode == 190){ 
+	                //.(쩜) 차단
+	                event.preventDefault();return false;    
+	            }else if(event.keyCode > 64 && event.keyCode < 91){
+	                //소문자 차단
+	                event.preventDefault();return false;
+	            }else if(event.keyCode == 229){
+	                //한글 차단
+	                event.preventDefault(); 
+	                var o = event.srcElement;
+	                setTimeout(function(){
+	                    o.value = o.value.replace(/[\ㄱ-ㅎ ㅏ-ㅣ 가-힣]/g,'');
+	                },1);
+	                return false;
+	            }else{
+	                console.log('onlyNumber 기타차단됨--->',event.keyCode);
+	                //기타 차단
+	                event.preventDefault(); 
+	                //특수문자차단추가수행
+	                /*
+	                var o = event.srcElement;
+	                setTimeout(function(){
+	                    var replaceChar = /[~!@\#$%^&*\()\-=+_'\;<>\/.\`:\"\\,\[\]?|{}]/gi;
+	                    var replaceNotFullKorean = /[ㄱ-ㅎㅏ-ㅣ]/gi;
+	                    o.value = o.value.replace(replaceChar,'');
+	                    o.value = o.value.replace(replaceNotFullKorean,'');
+	                },1);   
+	                */          
+	                return false;
+	            }
+	        }else if(keyMask.indexOf('onlyMoney') > -1){
+	            if($m.isBasisKey(event.keyCode)){
+	                //편집을 위한 기본적인 허용키
+	                return true;
+	            }else if(event.keyCode == 188){ 
+	                //(,)쉼표허용
+	                return true;
+	            }else if(event.shiftKey && event.keyCode > 47 && event.keyCode < 58){   
+	                //특수문자차단
+	                event.preventDefault();
+	                return false;
+	            }else if(event.keyCode == 109 || event.keyCode == 189){ 
+	                //마이너스(-) 허용
+	                return true;
+	            }else if(event.keyCode > 47 && event.keyCode < 58){
+	                //숫자 허용
+	                return true;
+	            }else if(event.keyCode > 95 && event.keyCode < 106){
+	                //키패드숫자 허용
+	                return true;                
+	            }else if(event.keyCode > 64 && event.keyCode < 91){
+	                //소문자 차단
+	                event.preventDefault();
+	                return false;
+	            }else if(event.keyCode == 229){
+	                //한글 차단
+	                event.preventDefault(); 
+	                var o = event.srcElement;
+	                setTimeout(function(){
+	                    o.value = o.value.replace(/[\ㄱ-ㅎ ㅏ-ㅣ 가-힣]/g,'');
+	                },1);
+	                return false;
+	            }else{
+	                console.log('onlyMoney 기타차단됨--->',event.keyCode);
+	                //기타 차단
+	                event.preventDefault(); 
+	                //특수문자차단추가수행
+	                var o = event.srcElement;
+	                setTimeout(function(){
+	                    var replaceChar = /[~!@\#$%^&*\()\-=+_'\;<>\/.\`:\"\\,\[\]?|{}]/gi;
+	                    var replaceNotFullKorean = /[ㄱ-ㅎㅏ-ㅣ]/gi;
+	                    o.value = o.value.replace(replaceChar,'');
+	                    o.value = o.value.replace(replaceNotFullKorean,'');
+	                },1);
+	                return false;
+	            }
+	        }else if(keyMask.indexOf('onlyPhone') > -1){
+	            if($m.isBasisKey(event.keyCode)){
+	                //편집을 위한 기본적인 허용키
+	                return true;
+	            }else if(event.keyCode == 188){ 
+	                //(,)쉼표차단
+	                event.preventDefault();
+	                return false;
+	            }else if(event.shiftKey && event.keyCode > 47 && event.keyCode < 58){   
+	                //특수문자차단
+	                event.preventDefault();
+	                return false;
+	            }else if(event.keyCode == 109 || event.keyCode == 189){ 
+	                //마이너스(-) 허용
+	                return true;
+	            }else if(event.keyCode > 47 && event.keyCode < 58){
+	                //숫자 허용
+	                return true;
+	            }else if(event.keyCode > 95 && event.keyCode < 106){
+	                //키패드숫자 허용
+	                return true;                
+	            }else if(event.keyCode > 64 && event.keyCode < 91){
+	                //소문자 차단
+	                event.preventDefault();
+	                return false;
+	            }else if(event.keyCode == 229){
+	                //한글 차단
+	                event.preventDefault(); 
+	                var o = event.srcElement;
+	                setTimeout(function(){
+	                    o.value = o.value.replace(/[\ㄱ-ㅎ ㅏ-ㅣ 가-힣]/g,'');
+	                },1);
+	                return false;
+	            }else{
+	                console.log('onlyPhone 기타차단됨--->',event.keyCode);
+	                //기타 차단
+	                event.preventDefault(); 
+	                //특수문자차단추가수행
+	                var o = event.srcElement;
+	                setTimeout(function(){
+	                    var replaceChar = /[~!@\#$%^&*\()\-=+_'\;<>\/.\`:\"\\,\[\]?|{}]/gi;
+	                    var replaceNotFullKorean = /[ㄱ-ㅎㅏ-ㅣ]/gi;
+	                    o.value = o.value.replace(replaceChar,'');
+	                    o.value = o.value.replace(replaceNotFullKorean,'');
+	                },1);
+	                return false;
+	            }
+	        }else if(keyMask.indexOf('onlyFloat') > -1){
+	            if($m.isBasisKey(event.keyCode)){
+	                //편집을 위한 기본적인 허용키
+	                return true;
+	            }else if(event.keyCode == 188){ 
+	                //(,)쉼표차단
+	                event.preventDefault();
+	                return false;
+	            }else if(event.shiftKey && event.keyCode > 47 && event.keyCode < 58){   
+	                //특수문자차단
+	                event.preventDefault();
+	                return false;
+	            }else if(event.keyCode == 109 || event.keyCode == 189){ 
+	                //마이너스(-) 차단
+	                event.preventDefault();
+	                return false;
+	            }else if(event.keyCode == 110 || event.keyCode == 190){ 
+	                //.(쩜) 허용
+	                return true;
+	            }else if(event.keyCode > 47 && event.keyCode < 58){
+	                //숫자 허용
+	                return true;
+	            }else if(event.keyCode > 95 && event.keyCode < 106){
+	                //키패드숫자 허용
+	                return true;                
+	            }else if(event.keyCode > 64 && event.keyCode < 91){
+	                //소문자 차단
+	                event.preventDefault();
+	                return false;
+	            }else if(event.keyCode == 229){
+	                //한글 차단
+	                event.preventDefault(); 
+	                var o = event.srcElement;
+	                setTimeout(function(){
+	                    o.value = o.value.replace(/[\ㄱ-ㅎ ㅏ-ㅣ 가-힣]/g,'');
+	                },1);
+	                return false;
+	            }else{
+	                console.log('onlyFloat 기타차단됨--->',event.keyCode);
+	                //기타 차단
+	                event.preventDefault(); 
+	                //특수문자차단추가수행
+	                /*
+	                var o = event.srcElement;
+	                setTimeout(function(){
+	                    var replaceChar = /[~!@\#$%^&*\()\-=+_'\;<>\/.\`:\"\\,\[\]?|{}]/gi;
+	                    var replaceNotFullKorean = /[ㄱ-ㅎㅏ-ㅣ]/gi;
+	                    o.value = o.value.replace(replaceChar,'');
+	                    o.value = o.value.replace(replaceNotFullKorean,'');
+	                },1);
+	                */
+	                return false;
+	            }
+	        }else if(keyMask.indexOf('onlyPercent') > -1){
+	            console.log(event.keyCode);
+	            if($m.isBasisKey(event.keyCode)){
+	                //편집을 위한 기본적인 허용키
+	                return true;
+	            }else if(event.keyCode == 188){ 
+	                //(,)쉼표차단
+	                event.preventDefault();
+	                return false;
+	            }else if(event.shiftKey && event.keyCode == 53){    
+	                //% 허용
+	                return true;
+	            }else if(event.shiftKey && event.keyCode > 47 && event.keyCode < 58){   
+	                //특수문자차단
+	                event.preventDefault();
+	                return false;
+	            }else if(event.keyCode == 109 || event.keyCode == 189){ 
+	                //마이너스(-) 허용
+	                return true;
+	            }else if(event.keyCode == 110 || event.keyCode == 190){ 
+	                //.(쩜) 허용
+	                return true;
+	            }else if(event.keyCode > 47 && event.keyCode < 58){
+	                //숫자 허용
+	                return true;
+	            }else if(event.keyCode > 95 && event.keyCode < 106){
+	                //키패드숫자 허용
+	                return true;                
+	            }else if(event.keyCode > 64 && event.keyCode < 91){
+	                //소문자 차단
+	                event.preventDefault();
+	                return false;
+	            }else if(event.keyCode == 229){
+	                //한글 차단
+	                event.preventDefault(); 
+	                var o = event.srcElement;
+	                setTimeout(function(){
+	                    o.value = o.value.replace(/[\ㄱ-ㅎ ㅏ-ㅣ 가-힣]/g,'');
+	                },1);
+	                return false;
+	            }else{
+	                console.log('onlyPercent 기타차단됨--->',event.keyCode);
+	                //기타 차단
+	                event.preventDefault(); 
+	                //특수문자차단추가수행
+	                /*
+	                var o = event.srcElement;
+	                setTimeout(function(){
+	                    var replaceChar = /[~!@\#$%^&*\()\-=+_'\;<>\/.\`:\"\\,\[\]?|{}]/gi;
+	                    var replaceNotFullKorean = /[ㄱ-ㅎㅏ-ㅣ]/gi;
+	                    o.value = o.value.replace(replaceChar,'');
+	                    o.value = o.value.replace(replaceNotFullKorean,'');
+	                },1);
+	                */
+	                return false;
+	            }
+	        }
+	    }
+	},
 		
 };

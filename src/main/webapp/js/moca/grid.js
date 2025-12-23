@@ -5,6 +5,7 @@
 const gridProto = {
 	codeCd : "",
 	codeNm : "",
+	rowSelectedColor : '#434e5f',
 	renderGrid() {
 	    ['renderGrid'];
 		let _divObj = this;
@@ -37,7 +38,7 @@ const gridProto = {
 	    var toolbar_dblclick = _divObj.getAttribute("toolbar_dblclick");
 	    var toolbar_fold = _divObj.getAttribute("toolbar_fold");
 	    
-	    if(this.getDevice() == 'pc'){
+	    if(com.getDevice() == 'pc'){
 	    	if(_divObj.getAttribute('toolbar_common_btns_pc')){
 	        	var _commBtnsStr = _divObj.getAttribute('toolbar_common_btns_pc');
 	        	var _commBtnsObj = JSON.parse(_commBtnsStr);
@@ -239,7 +240,7 @@ const gridProto = {
 	    var __onclick = '';
 	    var __ondblclick = '';
 	    var __swipeStyle = '';
-	    if(this.getDevice() != 'pc'){
+	    if(com.getDevice() != 'pc'){
 	    	__onclick = 'onclick="$m.swaipClickScroll(this)"';
 	    	__ondblclick = 'ondblclick="$m.swaipDblScroll(this)"';
 	    	__swipeStyle = 'width: 100%; left: 0px;';
@@ -272,7 +273,7 @@ const gridProto = {
 	    _html +='           <div class="rta"> ';
 	    _html +='               <button type="button" id="btn_colTh1" class="button colTh1" style="" title="그리드th1단"  onclick="$m._detailView1(this)"></button> ';
 	    _html +='               <button type="button" id="btn_colTh2" class="button colTh2" style="" title="그리드th2단"  onclick="$m._detailView2(this)"></button> ';
-	    if(this.getDevice() != "mobile"){
+	    if(com.getDevice() != "mobile"){
 	    	_html +='           <button type="button" id="btn_colTh3" class="button colTh3" style="" title="그리드th3단"  onclick="$m._detailView3(this)"></button>'; 
 	    }
 	    _html +='               <button type="button" id="" class="button grid_detail_close" style="" title="" onclick="$m._detailViewClose(this)"></button>';
@@ -601,7 +602,7 @@ const gridProto = {
 	    if(x1Obj.id != null){
 	       _btnid = x1Obj.id;
 	    }
-	    if(this.getDevice() != 'pc' && x1Obj.mobileHide == "true"){
+	    if(com.getDevice() != 'pc' && x1Obj.mobileHide == "true"){
 	    	_html += '<div class="grid_btn '+x1Obj.addClassStr+'" grdkey="'+_id+'" style="display:none">';
 	    }else{
 	    	_html += '<div class="grid_btn '+x1Obj.addClassStr+'" grdkey="'+_id+'">';
@@ -652,7 +653,7 @@ const gridProto = {
 	    }else{
 	    	 x1Obj.expressionStr = eval(x1Obj.expression);
 	    }*/
-	    if(this.getDevice() != 'pc' && x1Obj.mobileHide == "true"){
+	    if(com.getDevice() != 'pc' && x1Obj.mobileHide == "true"){
 	    	_html += '<div class="grid_label_span'+x1Obj.addClassStr+'" style="display:none">';
 	    }else{
 	    	_html += '<div class="grid_label_span '+x1Obj.addClassStr+'" grdkey="'+x1Obj.id+'">';
@@ -989,7 +990,7 @@ const gridProto = {
        
    },
    
-   drawGrid_inside(_grdId,_list,_orilist,_pageId,_srcId,_response){
+   drawGrid_inside (_grdId,_list,_orilist,_pageId,_srcId,_response){
        var _grd;
        if(typeof _grdId == 'string'){
            _grd = this.getObj(_grdId,null,_pageId,_srcId);
@@ -1399,7 +1400,7 @@ const gridProto = {
            var aCol = _grd.querySelector('.moca_grid_body colgroup col[columnkey="' + CSS.escape(_id) + '"]');
 
            if (aCol) {
-             if (this.getDevice() == "pc") {
+             if (com.getDevice() == "pc") {
                //$m.moblePcHide(aCol, "hide");
                if (aCol.getAttribute("hide") == "true") {
                  _style = _style.replace("display: table-cell", "display: none");
@@ -1563,17 +1564,16 @@ const gridProto = {
                var cls = (_required == "true") ? "moca_input req" : "moca_input";
                _inTag =
                  '<input type="text" maxLength="' + maxLen + '"' +
-                 ' onblur="$m.setValue(this,this.value,\'' + _keyMaskStr + '\');"' +
-                 ' onkeydown="$m.keydown(this,this.value,\'' + _keyMaskStr + '\');"' +
+                 ' onblur="com.setValue(this,this.value,\'' + _keyMaskStr + '\');"' +
+                 ' onkeydown="com.keydown(this,this.value,\'' + _keyMaskStr + '\');"' +
                  " displayFunction='" + (_displayFunction || "") + "'" +
                  " displayFunctionApply='" + (_displayFunctionApply || "") + "'" +
                  ' class="' + cls + '"' +
                  ' style="' + _style + '"' +
                  ' value="' + _reLabel3 + '"' +
-                 ' onkeyup="$m._uptData(this)" onfocus="$m._evt_selectFocus(this)">';
+                 ' onkeyup="'+_grd.id+'._uptData(this)" onfocus="'+_grd.id+'._evt_selectFocus(this)">';
              }
            }
-
            row +=
              '<td id="' + _id + '" class="' + _class + '" name="' + _name + '"' +
              ' toolTip="' + _toolTip + '" celltype="' + _celltype + '"' +
@@ -1582,7 +1582,7 @@ const gridProto = {
              ' editorMode="' + (_editorMode || "") + '"' +
              ' style="' + _style + '"' +
              ' readOnly="' + readOnly + '"' +
-             ' onclick="$m.defaultCellClick(this)">' +
+             ' onclick="'+_grd.id+'.defaultCellClick(this)">' +
              _inTag + "</td>";
 
          // ===== inputButton =====
@@ -1602,11 +1602,11 @@ const gridProto = {
              if (_renderingDiv2) {
                _inTag2 += '<div type="text" class="moca_input" readonly style="' + _style + '">' + _reLabel4 + "</div>";
              } else {
-               _inTag2 += '<input type="text" class="moca_input" readonly style="' + _style + '" value="' + _reLabel4 + '" onkeyup="$m._uptData(this)" onfocus="$m._evt_selectFocus(this)">';
+               _inTag2 += '<input type="text" class="moca_input" readonly style="' + _style + '" value="' + _reLabel4 + '" onkeyup="this._uptData(this)" onfocus="'+_id+'._evt_selectFocus(this)">';
              }
 
              if (String(_callFunction ?? "").trim() !== "") {
-               _inTag2 += '<button type="button" class="moca_ibn_btn" onclick="' + _callFunction + '(this)" onfocus="$m._evt_selectFocus(this)">검색</button></div>';
+               _inTag2 += '<button type="button" class="moca_ibn_btn" onclick="' + _callFunction + '(this)" onfocus="'+_id+'._evt_selectFocus(this)">검색</button></div>';
              } else {
                _inTag2 += "</div>";
              }
@@ -1637,7 +1637,7 @@ const gridProto = {
            } else {
              if (String(_callFunction ?? "").trim() !== "") {
                _inTag3 = '<div class="grid_btn">';
-               _inTag3 += '<button type="button" onclick="' + _callFunction + '(this,\'' + _nowIndex + '\',\'' + _id + '\')" onfocus="$m._evt_selectFocus(this)" ' + isDisabled + ">" + btnLabel + "</button>";
+               _inTag3 += '<button type="button" onclick="' + _callFunction + '(this,\'' + _nowIndex + '\',\'' + _id + '\')" onfocus="'+_id+'._evt_selectFocus(this)" ' + isDisabled + ">" + btnLabel + "</button>";
                _inTag3 += "</div>";
              }
            }
@@ -1694,7 +1694,7 @@ const gridProto = {
                ct_nm = '<span class="category ' + cellTd.getAttribute("depth5IconClass") + '">' + cellTd.getAttribute("depth5IconClass") + "</span>";
              }
 
-             _inTag4 += '<span>' + line + '<div class="' + icon_folder + '" onclick="$m.grid_expand(this);"></div>' + ct_nm + "<label>" + _label + "</label></span>";
+             _inTag4 += '<span>' + line + '<div class="' + icon_folder + '" onclick="'+_id+'.grid_expand(this);"></div>' + ct_nm + "<label>" + _label + "</label></span>";
            }
 
            row += '<td id="' + _id + '" class="' + _class + '" name="' + _name + '"  toolTip="' + _toolTip + '" celltype="' + _celltype + '" style="' + _style + '"  readOnly="' + readOnly + '" class="tal">' + _inTag4 + "</td>";
@@ -1730,7 +1730,7 @@ const gridProto = {
              _inTag5 += "</div>";
            }
 
-           row += '<td id="' + _id + '" class="' + _class + '" name="' + _name + '"  toolTip="' + _toolTip + '" celltype="' + _celltype + '" style="' + _style + '"  readOnly="' + readOnly + '" trueValue="' + _trueValue + '" falseValue="' + _falseValue + '"  disabledFunction="' + _disabledFunction + '" onclick="$m.defaultCellClick(this);" >' + _inTag5 + "</td>";
+           row += '<td id="' + _id + '" class="' + _class + '" name="' + _name + '"  toolTip="' + _toolTip + '" celltype="' + _celltype + '" style="' + _style + '"  readOnly="' + readOnly + '" trueValue="' + _trueValue + '" falseValue="' + _falseValue + '"  disabledFunction="' + _disabledFunction + '" onclick="'+_id+'.defaultCellClick(this);" >' + _inTag5 + "</td>";
 
          // ===== radio =====
          } else if (_celltype == "radio") {
@@ -1840,7 +1840,7 @@ const gridProto = {
 
 		// .moca_grid_body
 		var div = _grd.querySelector('.moca_grid_body');
-		if (div && div.scrollWidth > div.clientWidth && this.getDevice() !== 'mobile') {
+		if (div && div.scrollWidth > div.clientWidth && com.getDevice() !== 'mobile') {
 		  // 세로 스크롤 +1 row 보정
 		  fullHeight += _default_cell_height;
 		}
@@ -1926,16 +1926,6 @@ const gridProto = {
 	    }catch(e){
 	        console.log('wFunction error:',e);
 	    }
-	},
-	/*
-	 * getDevice
-	 */
-	getDevice (){
-	    ['toSingleMdi']; 
-	    var sw = screen.width;
-		var _m = 'pc';
-		(sw < 1280)?_m="mobile":_m = "pc";
-		return _m;
 	},
 	
 	fn_display_rownum (_value,_grd,_rowIndex){ 
@@ -2416,6 +2406,327 @@ const gridProto = {
 		this.sFunction(yscrollObj);
 
 	},
+	
+	_uptData (_thisObj) {
+	  ['에디팅데이터 실시간 dataList에 반영'];
+
+	  $m._selectFocus(_thisObj);
+
+	  // ===== jQuery -> DOM =====
+	  var grd = (_thisObj instanceof Element) ? _thisObj.closest('div[type="grid"]') : null;
+	  if (!grd) return;
+
+	  var td = (_thisObj instanceof Element) ? _thisObj.closest('td') : null;
+	  var colid = td ? td.id : null;
+
+	  var tbody = (_thisObj instanceof Element) ? _thisObj.closest('tbody') : null;
+	  var tr = (_thisObj instanceof Element) ? _thisObj.closest('tr') : null;
+
+	  // jQuery: rowIndex = _tbody.children().index(_thisTr);
+	  var rowIndex = -1;
+	  if (tbody && tr) rowIndex = Array.prototype.indexOf.call(tbody.children, tr);
+
+	  var realRowIndex = grd.getAttribute("selectedRealRowIndex");
+
+	  var _thisEvtObj;
+
+	  // event.srcElement 대체 (브라우저 호환)
+	  var evt = (typeof event !== 'undefined') ? event : null;
+	  var srcEl = evt ? (evt.target || evt.srcElement) : null;
+
+	  if (_thisObj && _thisObj.tagName === "TD") {
+	    $m._selectFocus(_thisObj);
+
+	    // TD 안 체크박스 토글
+	    var chkbox = _thisObj.querySelector(".moca_checkbox_grid>input");
+	    if (chkbox) {
+	      _thisObj = chkbox;
+	      _thisObj.checked = !_thisObj.checked;
+	    }
+
+	    // TD 안 라디오 클릭(이벤트 타겟 기억)
+	    var rdobox = _thisObj.querySelector(".moca_radio_grid>input");
+	    if (rdobox) {
+	      _thisEvtObj = srcEl;
+	    }
+	  }
+
+	  // ===== checkbox 처리 =====
+	  if (_thisObj && _thisObj.type === "checkbox") {
+	    var allCheckbox = grd.querySelector('input[name="cbxAll"]');
+
+	    var arr_all = grd.querySelectorAll('td input[type="checkbox"]');
+	    var arr_checked = grd.querySelectorAll('td input[type="checkbox"]:checked');
+
+	    if (allCheckbox) {
+	      if (arr_all.length === arr_checked.length && arr_all.length !== 0) {
+	        allCheckbox.checked = true;
+	        allCheckbox.indeterminate = false;
+	      } else if (arr_all.length === 0) {
+	        allCheckbox.checked = false;
+	        allCheckbox.indeterminate = false;
+	      } else {
+	        allCheckbox.checked = false;
+	        allCheckbox.indeterminate = (arr_checked.length !== 0);
+	      }
+	    }
+
+	    if (_thisObj.checked) {
+	      var vTrue = td ? td.getAttribute("trueValue") : null;
+	      if (vTrue == null) vTrue = "true";
+	      $m.setCellData(grd, realRowIndex, colid, vTrue);
+	    } else {
+	      var vFalse = td ? td.getAttribute("falseValue") : null;
+	      $m.setCellData(grd, realRowIndex, colid, vFalse);
+	    }
+	    return;
+	  }
+
+	  // ===== radio 처리 =====
+	  if (_thisEvtObj != null && _thisEvtObj.type === "radio") {
+	    if (_thisEvtObj.checked) {
+	      var _value = _thisEvtObj.value;
+	      $m.setCellData(grd, realRowIndex, colid, _value);
+	    }
+	    return;
+	  }
+
+	  // jQuery: $(_thisEvtObj).prev()...
+	  if (_thisEvtObj instanceof Element) {
+	    var prev = _thisEvtObj.previousElementSibling;
+	    if (prev && prev.type === "radio" && prev.checked) {
+	      var _value2 = prev.value;
+	      $m.setCellData(grd, realRowIndex, colid, _value2);
+	      return;
+	    }
+	  }
+
+	  // ===== TD 클릭 처리 =====
+	  if (_thisObj && _thisObj.tagName === "TD") {
+	    var inputInTd = _thisObj.querySelector("input");
+	    if (inputInTd) {
+	      // jQuery: .attr('value') (속성) vs .value(현재값)
+	      // 원본은 attr('value')를 썼으니 동일하게 attribute 우선
+	      var _value3 = inputInTd.getAttribute("value");
+	      if (_value3 == null) _value3 = inputInTd.value;
+	      $m.setCellData(grd, realRowIndex, colid, _value3);
+	    } else {
+	      var _value4 = _thisObj.innerHTML;
+	      $m.setCellData(grd, realRowIndex, colid, _value4);
+	    }
+	    return;
+	  }
+
+	  // ===== input 등 일반 요소 처리 =====
+	  var displayfunctionValue = (_thisObj instanceof Element) ? _thisObj.getAttribute("displayfunction") : null;
+	  var displayFunctionApplyValue = (_thisObj instanceof Element) ? _thisObj.getAttribute("displayFunctionApply") : null;
+
+	  if ($m.trim(displayfunctionValue) !== '' && $m.trim(displayFunctionApplyValue) === 'realtime') {
+	    var reValue = eval(displayfunctionValue)(_thisObj.value);
+	    $m.setCellData(grd, realRowIndex, colid, reValue);
+	  } else {
+	    $m.setCellData(grd, realRowIndex, colid, _thisObj.value);
+	  }
+	},
+
+	grid_expand (_thisObj) {
+	  ['grid_tree expand'];
+
+	  var trObj;
+	  if (_thisObj && _thisObj.tagName === 'TR') {
+	    trObj = _thisObj;
+	  } else {
+	    trObj = _thisObj ? _thisObj.closest('tr') : null; // jQuery closest 대체
+	  }
+	  if (!trObj) return;
+
+	  var realRowInfo = $m.getRealRowInfo(trObj);
+	  var _realIndex = realRowInfo.realRowIndex;
+	  var _grd = realRowInfo.grd;
+
+	  $m.grid_expand_loop(_grd, _realIndex, null, 1);
+	  $m.grid_redraw(_grd);
+	},
+	
+	defaultCellClick (_thisObj) {
+	  // event.preventDefault();
+
+	  // celltype 체크
+	  var celltype = _thisObj ? _thisObj.getAttribute('celltype') : null;
+
+	  // input + input태그 있으면 종료
+	  if (celltype === 'input' && _thisObj.querySelectorAll('input').length > 0) {
+	    return;
+	  }
+
+	  // input + div[type="input"] 있으면 편집모드 처리
+	  if (celltype === 'input' && _thisObj.querySelectorAll('div[type="input"]').length > 0) {
+	    var _divObj = _thisObj.querySelector('div[type="input"]');
+	    var _value = _divObj ? _divObj.innerHTML : '';
+	    var _grd = _thisObj.closest('div[type="grid"]');
+
+	    var cellTd = _thisObj;
+	    var _keyMaskStr = '';
+	    var _editorMode = $m.trim(cellTd.getAttribute('editormode'));
+	    var _keyMask = $m.trim(cellTd.getAttribute('keyMask'));
+	    var _displayfunction = $m.trim(cellTd.getAttribute('displayfunction'));
+	    var _displayfunctionapply = $m.trim(cellTd.getAttribute('displayfunctionapply'));
+
+	    if (_keyMask != null) _keyMaskStr = _keyMask;
+
+	    // th명 구하기: $($(_grd).find('thead th')[_thisObj.cellIndex]).text()
+	    var _thNm = '';
+	    if (_grd) {
+	      var ths = _grd.querySelectorAll('thead th');
+	      if (ths && ths[_thisObj.cellIndex]) _thNm = (ths[_thisObj.cellIndex].textContent || '');
+	    }
+
+	    if (com.getDevice() === 'mobile') {
+	      if (String(_editorMode || '').trim() !== '') {
+	        $m.popup({
+	          type: "POPUP",
+	          modal: "true",
+	          url: '/moca/comp/COMP_EDIT.html',
+	          title: _thNm,
+	          data: {
+	            value: _value,
+	            grdId: _grd ? _grd.id : '',
+	            tdId: _thisObj.id,
+	            pageId: _grd ? _grd.getAttribute("pageid") : '',
+	            srcId: _grd ? _grd.getAttribute("srcid") : '',
+	            scopeId: _grd ? _grd.getAttribute("pageid") : ''
+	          }
+	        });
+	      } else {
+	        $m.zoomInput(_thisObj, _grd, _value);
+	      }
+	    } else {
+	      if (String(_editorMode || '').trim() !== '') {
+	        $m.popup({
+	          type: "POPUP",
+	          modal: "true",
+	          url: '/moca/comp/COMP_EDIT.html',
+	          title: _thNm,
+	          data: {
+	            value: _value,
+	            grdId: _grd ? _grd.id : '',
+	            tdId: _thisObj.id,
+	            pageId: _grd ? _grd.getAttribute("pageid") : '',
+	            srcId: _grd ? _grd.getAttribute("srcid") : '',
+	            scopeId: _grd ? _grd.getAttribute("pageid") : ''
+	          }
+	        });
+	      } else {
+	        // $(_divObj).html(...) 대체
+	        if (_divObj) {
+	          _divObj.innerHTML =
+	            "<input type='text' " +
+	            "onkeyup=\"$m._uptData(this)\" " +
+	            "displayFunction='" + (_displayfunction || "") + "' " +
+	            "displayFunctionApply='" + (_displayfunctionapply || "") + "' " +
+	            "onblur=\"'+_id+'.setDivTag(this,this.value,'" + (_keyMaskStr || "") + "');\" " +
+	            "value='" + (_value || "") + "'/>";
+	        }
+	      }
+	    }
+	  }
+
+	  // ===== 아래는 클릭 처리/데이터 반영 =====
+	  var grd = _thisObj ? _thisObj.closest('div[type="grid"]') : null;
+	  if (!grd) return;
+
+	  $m.nowGrd = grd;
+
+	  var selectedRealRowIndex = $m.nowGrd.getAttribute("selectedRealRowIndex");
+
+	  var _thisTd = _thisObj.closest('td');
+	  var colId = _thisTd ? _thisTd.id : null;
+	  $m.nowColId = colId;
+
+	  var _tbody = _thisObj.closest('tbody');
+	  var _thisTr = _thisObj.closest('tr');
+
+	  var realRowIndex = _thisTr ? Number(_thisTr.getAttribute("realrowindex")) : NaN;
+
+	  // jQuery: _tbody.children().index(_thisTr)
+	  var rowIndex = -1;
+	  if (_tbody && _thisTr) rowIndex = Array.prototype.indexOf.call(_tbody.children, _thisTr);
+
+	  selectedRealRowIndex = grd.getAttribute("selectedRealRowIndex");
+
+	  var onBeforeClickStr = grd.getAttribute("onBeforeClick");
+	  var onAfterClickStr = grd.getAttribute("onAfterClick");
+
+	  var pro = Promise.resolve();
+
+	  if (onBeforeClickStr != "" && onBeforeClickStr != null) {
+	    pro = pro.then(function () {
+	      return eval(onBeforeClickStr)(grd, realRowIndex, colId);
+	    });
+	  }
+
+	  pro = pro.then(function () {
+	    return $m._uptData(_thisObj);
+	  });
+
+	  if (onAfterClickStr != "" && onAfterClickStr != null) {
+	    pro = pro.then(function () {
+	      return eval(onAfterClickStr)(grd, realRowIndex, colId);
+	    });
+	  }
+
+	  return pro;
+	},
+	
+	_evt_selectFocus (_thisObj){
+	    ['focus이벤트에서 포커스배경색주기'];
+	    this._selectFocus(event.srcElement.parentElement);
+	},
+	
+	_selectFocus (_thisObj){
+	    ['row select 표시'];
+		var isTd = _thisObj;
+
+		if (isTd && isTd.tagName === 'TD') {
+		  // input 경우
+		  var grd = _thisObj.closest('div[type="grid"]');
+
+		  // 원본의 fallback: $("#"+_tdObj.id).closest(...)[0]
+		  if (!grd && typeof _tdObj !== 'undefined' && _tdObj && _tdObj.id) {
+		    var el = document.getElementById(_tdObj.id);
+		    grd = el ? el.closest('div[type="grid"]') : null;
+		  }
+
+		  this._setSelectRowIndex(isTd);
+		  if (grd) this._setRowSelection(grd);
+
+		} else {
+		  // select 경우 (대개 input/select 같은 요소)
+		  isTd = _thisObj ? _thisObj.parentElement : null;
+
+		  if (isTd && isTd.tagName === 'TD') {
+		    var grd2 = _thisObj.closest('div[type="grid"]');
+
+		    if (!grd2 && typeof _tdObj !== 'undefined' && _tdObj && _tdObj.id) {
+		      var el2 = document.getElementById(_tdObj.id);
+		      grd2 = el2 ? el2.closest('div[type="grid"]') : null;
+		    }
+
+		    if (grd2 && grd2.getAttribute('type') === 'grid') {
+		      this._setSelectRowIndex(isTd);
+		      this._setRowSelection(grd2);
+		    }
+		  }
+		}
+	},
+	  
+	setDivTag (__comp,__value,_keyMask){
+	  	this.setValue(__comp,__value,_keyMask);
+		if (__comp && __comp.parentElement) {
+		  __comp.parentElement.innerHTML = __value;
+		}
+  	},
+	
 
 }
 
