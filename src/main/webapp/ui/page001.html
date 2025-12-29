@@ -7,7 +7,12 @@
 <script>
 function onpageload(){
 	let grd_1 = new Grid(grd_13); 
-	grd_1.draw(data.list1);
+	
+	com.code({
+		"grd_13.EFC_COMBO":{code:'age',allOption:{label:"-선택-",value:""}},
+	},function(){
+		grd_1.draw(data.list1);
+	});
 };
 </script>
 <body onpageload="onpageload">
@@ -32,7 +37,7 @@ function onpageload(){
 						<col style="width:100px"><!-- 구분 -->
 						<col style="width:250px"><!-- 금융기관명 -->
 						<col style="width:100px"><!-- 담당자 -->
-						<col style="width:500px"><!-- 주소 -->
+						<col style="width:200px"><!-- 주소 -->
 						<col style="width:120px"><!-- 전화번호 -->
 						<col style="width:120px" mobileHide="false" hide="false" columnKey="EFC_COMBO" thKey="H_EFC_COMBO" >
 						<col style=""><!-- 비고 -->
@@ -61,7 +66,7 @@ function onpageload(){
 						<td excelIndex="4"  id="FinacManager" name="이름"  celltype="input" style="" readonly="true" displayFunction=""></td>
 						<td excelIndex="5"  id="FinacAddress" name="주소"  celltype="input" style="text-align:left" readonly="true" displayFunction=""></td>
 						<td excelIndex="6"  id="CorpPhone" name="전화번호"  celltype="input" style="" readonly="true" displayFunction=""></td>
-						<td excelIndex="7" id="EFC_COMBO" celltype="input" style="text-align:center" required="false" name="공통콤보" readOnly="false"></td>
+						<td excelIndex="7" id="EFC_COMBO" celltype="select" style="text-align:center" required="false" name="공통콤보" readOnly="false"></td>
 						<td excelIndex="8"  id="Note" name="비고"  celltype="input" style="" readonly="true" displayFunction=""></td>
 						
 					</tr>

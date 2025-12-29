@@ -284,6 +284,27 @@ const com = {
 		}
 	},
 	
+	stopEvent (_evt) {
+	    _evt.stopPropagation();
+	    _evt.stopImmediatePropagation();
+	},
+	
+	offset(el) {
+	  const rect = el.getBoundingClientRect();
+	  return {
+	    top: rect.top + window.pageYOffset,
+	    left: rect.left + window.pageXOffset
+	  };
+	},
+	
+	getSize(el) {
+	  if (!el) return { width: 0, height: 0 };
+	  return {
+	    width: el.clientWidth,
+	    height: el.clientHeight
+	  };
+	},
+	
 	displayKeyMask (_value,_keyMask){
 	    if(_keyMask != null && _keyMask.indexOf('onlyNumber') > -1){
 	        return _value.replace(/-/g,'');
@@ -562,5 +583,156 @@ const com = {
 	        }
 	    }
 	},
+
+	code (_config,_callback,_url,_pageId,_srcId) {
+	    ['common code binder'];
+	    var u;
+	    if(_url != null){
+	        u = _url;
+	    }else{
+	        u = this._domain+this._contextRoot+"/code_json.do";
+	    }
+	   
+		var response = data.list2;
+        var ks = Object.keys(_config);
+        for(var i=0; i < ks.length; i++){
+            var compId = ks[i];
+            if(!compId.startsWith("data___")){
+                var v = _config[compId];
+                //var l = response[compId]; ---임시
+                var l = response;
+				var cid = compId;
+                var gridAndCellArr = cid.split('.');
+                if(gridAndCellArr.length == 1){
+                    //일반
+                    var compId = gridAndCellArr[0];
+                    var compObj = this.getObj(compId,null,_pageId,_srcId);
+                    if(compObj != null ){//&& compObj['list'] == null
+                        compObj['list'] = l;
+                        compObj['codeOpt'] = v;
+                        if(compObj.getAttribute("type") == "searchCombo"){
+                            $m.renderSearchCombo(compObj,null,'normal',_pageId,_srcId);
+                        }else if(compObj.getAttribute("type") == "combo"){
+                            $m.renderCombo(compObj,null,'normal',_pageId,_srcId);
+                        }
+                    }                   
+                }else{
+                    //그리드
+                    var gridId = gridAndCellArr[0];
+                    var cellId = gridAndCellArr[1];
+                    var g_obj = this.getObj(gridId,null,_pageId,_srcId);
+                    if(g_obj[cellId] == null){
+                        g_obj[cellId] = {};
+                    } 
+                    g_obj[cellId]['list'] = l;
+                    g_obj[cellId]['codeOpt'] = v;
+					debugger;
+                    g_obj[cellId]['map'] = this.listToMap(l,v);
+                }
+            }else{
+                
+                
+            }
+        }
+        if(_callback != null){
+            _callback(response);
+        }
+	},
+	
+	getObj(_objId,_tag,_pageId,_srcId){
+	    ['고유한 obj찾기'];
+	    var re;
+	    if(_tag == null){
+	        if(_pageId != null){
+	            re = document.querySelector(`div[id="${_objId}"][pageId="${_pageId}"]`);
+	        }else if(this.pageId != null){
+				re = document.querySelector(`div[id="${_objId}"][pageId="${this.pageId}"]`);
+	        }else{
+				re = document.querySelector(`div[id="${_objId}"]`);
+	        }
+	    }else{
+	        if(_pageId != null){
+				re = document.querySelector(`${_tag}[id="${_objId}"][pageId="${_pageId}"]`);
+	        }else if(this.pageId != null){
+	            re = document.querySelector(`${_tag}[id="${_objId}"][pageId="${this.pageId}"]`); 
+	        }else{
+				re = document.querySelector(`div[id="${_objId}"]`);
+	        }       
+	    }
 		
+		if (re != null) {
+
+		  re.getCheckbox = function (_checkboxId) {
+		    // grid toolbar 내 checkbox 정보 가져오기
+		    const cObj = this.querySelector('#' + CSS.escape(_checkboxId));
+
+		    if (cObj != null) {
+		      return {
+		        id: _checkboxId,
+		        checked: cObj.checked,
+		        value: cObj.value
+		      };
+		    } else {
+		      return null;
+		    }
+		  };
+
+		  re.getInput = function (_inputId) {
+		    // grid toolbar 내 input 정보 가져오기
+		    const cObj = this.querySelector('#' + CSS.escape(_inputId));
+
+		    if (cObj != null) {
+		      return {
+		        id: _inputId,
+		        value: cObj.value
+		      };
+		    } else {
+		      return null;
+		    }
+		  };
+
+		  if (re.length > 1) {
+		    alert('중복된 아이디가 있습니다. ID(' + _objId + ')를 변경해주세요');
+		  }
+
+		  return re;
+
+		} else {
+		  return null;
+		}
+	},
+
+	getAttrObj(_grdObj,_attr){
+	   	var attrObj = (_grdObj.getAttribute(_attr) != null)? JSON.parse(_grdObj.getAttribute(_attr)):{};
+	   	return attrObj;
+	},
+	
+	listToMap (_list,_option,filterableId) {
+	    var re = {};
+	    if(_option != null){
+	        var _code = '';
+	        var _name = '';
+	        if(_option.metaInfo != null){
+	            _code = _option.metaInfo.codeCd;
+	            _name = _option.metaInfo.codeNm;
+	        }
+	        for(var i=0,j=_list.length; i < j; i++){
+	            var row = _list[i];
+	            if(_code == ''){
+	                re[row.code] = row.codeNm;
+	            }else{
+	                re[row[_code]] = row[_name];
+	            }
+	        }
+	    }else{
+	        for(var i=0,j=_list.length; i < j; i++){
+	            var row = _list[i];
+	            var value = row[filterableId];
+	            re[value] = value;
+	        }
+	    }
+
+	    return re;
+	},
+
 };

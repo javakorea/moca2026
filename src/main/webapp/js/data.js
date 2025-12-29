@@ -139,3 +139,37 @@ data.list1 = [
         "idx": 1754
     }
 ];
+
+data.list2 = 
+[
+    {
+        "codeId": "TEST",
+        "codeIdNm": "",
+        "code": "T1",
+        "codeNm": "TEST콤보1",
+        "codeDc": "",
+        "useAt": "",
+        "frstRegisterId": "",
+        "lastUpdusrId": ""
+    },
+    {
+        "codeId": "TEST",
+        "codeIdNm": "",
+        "code": "T2",
+        "codeNm": "TEST콤보2",
+        "codeDc": "",
+        "useAt": "",
+        "frstRegisterId": "",
+        "lastUpdusrId": ""
+    },
+    {
+        "codeId": "TEST",
+        "codeIdNm": "",
+        "code": "T3",
+        "codeNm": "TEST콤보3",
+        "codeDc": "",
+        "useAt": "",
+        "frstRegisterId": "",
+        "lastUpdusrId": ""
+    }
+];

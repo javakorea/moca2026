@@ -3,8 +3,8 @@
 
 
 const gridProto = {
-	codeCd : "",
-	codeNm : "",
+	codeCd : 'code',
+	codeNm : 'codeNm',
 	rowSelectedColor : '#434e5f',
 	renderGrid() {
 	    ['renderGrid'];
@@ -12,7 +12,7 @@ const gridProto = {
 	    var _id = _divObj.id;
 	    var pageid = _divObj.getAttribute("pageid");
 	    var srcid = _divObj.getAttribute("srcid");
-	    this.getObj(_id,null,pageid,srcid);//id중복체크
+	    com.getObj(_id,null,pageid,srcid);//id중복체크
 	    
 	    var _default_cell_height = _divObj.getAttribute("default_cell_height");
 	    var _label = _divObj.getAttribute("label");
@@ -468,7 +468,7 @@ const gridProto = {
 
 		    var filterable = aTh.getAttribute("filterable");
 		    if (filterable == "true") {
-		      _after += '<button class="moca_grid_filter_btn" onclick="$m.doFilter(this)" ondblclick="$m.doFilterDblclick(this)">필터</button>';
+		      _after += '<button class="moca_grid_filter_btn" onclick="'+_id+'.doFilter(this)" ondblclick="$m.doFilterDblclick(this)">필터</button>';
 		      _after += '<i onclick="$m.filterRemoveAllConfirm(this);"></i>';
 		    }
 
@@ -820,74 +820,6 @@ const gridProto = {
 	    return _html;
 	},
 
-	getObj(_objId,_tag,_pageId,_srcId){
-	    ['고유한 obj찾기'];
-	    var re;
-	    if(_tag == null){
-	        if(_pageId != null){
-	            re = document.querySelector(`div[id="${_objId}"][pageId="${_pageId}"]`);
-	        }else if(this.pageId != null){
-				re = document.querySelector(`div[id="${_objId}"][pageId="${this.pageId}"]`);
-	        }else{
-				re = document.querySelector(`div[id="${_objId}"]`);
-	        }
-	    }else{
-	        if(_pageId != null){
-				re = document.querySelector(`${_tag}[id="${_objId}"][pageId="${_pageId}"]`);
-	        }else if(this.pageId != null){
-	            re = document.querySelector(`${_tag}[id="${_objId}"][pageId="${this.pageId}"]`); 
-	        }else{
-				re = document.querySelector(`div[id="${_objId}"]`);
-	        }       
-	    }
-		
-		if (re != null) {
-
-		  re.getCheckbox = function (_checkboxId) {
-		    // grid toolbar 내 checkbox 정보 가져오기
-		    const cObj = this.querySelector('#' + CSS.escape(_checkboxId));
-
-		    if (cObj != null) {
-		      return {
-		        id: _checkboxId,
-		        checked: cObj.checked,
-		        value: cObj.value
-		      };
-		    } else {
-		      return null;
-		    }
-		  };
-
-		  re.getInput = function (_inputId) {
-		    // grid toolbar 내 input 정보 가져오기
-		    const cObj = this.querySelector('#' + CSS.escape(_inputId));
-
-		    if (cObj != null) {
-		      return {
-		        id: _inputId,
-		        value: cObj.value
-		      };
-		    } else {
-		      return null;
-		    }
-		  };
-
-		  if (re.length > 1) {
-		    alert('중복된 아이디가 있습니다. ID(' + _objId + ')를 변경해주세요');
-		  }
-
-		  return re;
-
-		} else {
-		  return null;
-		}
-	},
-	
-	getAttrObj(_grdObj,_attr){
-	   	var attrObj = (_grdObj.getAttribute(_attr) != null)? JSON.parse(_grdObj.getAttribute(_attr)):{};
-	   	return attrObj;
-   },
-   
 	_setSelectRowIndex(_tdObj){
 	    ['row select Index구하기'];
 		var tr;
@@ -983,9 +915,9 @@ const gridProto = {
 		_grdId = this;
        this.drawGrid_inside(_grdId,_list,_list,this.pageId,this.srcId,_response);
        if(typeof _grdId == 'object'){
-           this.getObj(_grdId.id+"_moca_scroll_y",null,this.pageId,this.srcId).scrollTop = 0; 
+           com.getObj(_grdId.id+"_moca_scroll_y",null,this.pageId,this.srcId).scrollTop = 0; 
        }else{
-           this.getObj(_grdId+"_moca_scroll_y",null,this.pageId,this.srcId).scrollTop = 0; 
+           com.getObj(_grdId+"_moca_scroll_y",null,this.pageId,this.srcId).scrollTop = 0; 
        }
        
    },
@@ -993,7 +925,7 @@ const gridProto = {
    drawGrid_inside (_grdId,_list,_orilist,_pageId,_srcId,_response){
        var _grd;
        if(typeof _grdId == 'string'){
-           _grd = this.getObj(_grdId,null,_pageId,_srcId);
+           _grd = com.getObj(_grdId,null,_pageId,_srcId);
        }else{
            _grd = _grdId;
            _grdId = _grdId.id;
@@ -1002,10 +934,10 @@ const gridProto = {
        //$m[_srcId].filterRemoveAll(_grd);
        _grd.list = _list;
        if(_grd.list != null){
-       	if(this.getAttrObj(_grd,'paging').type != 'numberList'){
+       	if(com.getAttrObj(_grd,'paging').type != 'numberList'){
        		this.setTotalCnt(_grd,com.comma(_grd.list.length));
        	}else if(_response != null){
-   			var _totalCnt =_response[this.getAttrObj(_grd,'paging').totalCntKey];
+   			var _totalCnt =_response[com.getAttrObj(_grd,'paging').totalCntKey];
        		this.setTotalCnt(_grd,_totalCnt);
        	}
            if(_orilist != null){
@@ -1301,7 +1233,7 @@ const gridProto = {
          this.pageId = grd.getAttribute("pageId");
          this.srcId = grd.getAttribute("srcid");
 
-         this.wFunction(this.getObj(_grd.id + "_moca_scroll_y"));
+         this.wFunction(com.getObj(_grd.id + "_moca_scroll_y"));
        }, { passive: true });
 
        // mousemove(table)
@@ -1460,7 +1392,7 @@ const gridProto = {
              var _allOpt;
              if (codeOpt != null) _allOpt = codeOpt.allOption;
 
-             _grd[_id]["map"] = this.listToMap(arr, codeOpt);
+             _grd[_id]["map"] = com.listToMap(arr, codeOpt);
 
              var _metaInfo;
              if (codeOpt != null) _metaInfo = codeOpt.metaInfo;
@@ -1514,7 +1446,7 @@ const gridProto = {
              }
 
              if (!selectFlag) {
-               selectTag = $m.getInputSelectTag("-선택-", _required);
+               selectTag = this.getInputSelectTag("-선택-", _required);
                if (!isAllOpt) {
                  cd = "";
                  nm = "-선택-";
@@ -1546,7 +1478,7 @@ const gridProto = {
            }
 
            var _inTag = "";
-           // jQuery: $(_grd).attr('rendering_div');
+           // jQuery: $(_grd).getAttribute('rendering_div');
            var _renderingDiv = _grd.getAttribute("rendering_div");
 
            if (_renderingDiv) {
@@ -1814,12 +1746,12 @@ const gridProto = {
    setTotalCnt (_grd,cnt){
           var grd;
           if(typeof _grd == 'string'){
-              grd = this.getObj(_grd,null,this.pageId,this.srcId);
+              grd = com.getObj(_grd,null,this.pageId,this.srcId);
           }else{
               grd = _grd;
           }
           grd.totalCnt = cnt;
-          /*if(this.getAttrObj(grd,'paging').type == 'numberList'){
+          /*if(com.getAttrObj(grd,'paging').type == 'numberList'){
           	$m[_srcId].setNumberListCnt(grd,cnt);
           }*/
 		  const el = grd.querySelector('.grid_total .txt_blue');
@@ -1861,7 +1793,7 @@ const gridProto = {
         this.pageId = yscroll.getAttribute("pageid");
         this.srcId = yscroll.getAttribute("srcid");
         var _grdId = yscroll.getAttribute("componentid");
-        var _grd = this.getObj(_grdId,null,this.pageId,this.srcId);
+        var _grd = com.getObj(_grdId,null,this.pageId,this.srcId);
         var onScrollEnd = _grd.getAttribute('onScrollEnd');
         var _default_cell_height = this.getCellHeight(_grd);
 
@@ -1912,7 +1844,7 @@ const gridProto = {
 	wFunction (yscroll) {
 	    //var _grd = document.getElementById(yscroll.getAttribute("componentid"));
 	    
-	    var _grd = this.getObj(yscroll.getAttribute("componentid"));
+	    var _grd = com.getObj(yscroll.getAttribute("componentid"));
 	    var _default_cell_height = this.getCellHeight(_grd);
 	    var val  =0;
 	    if (event.deltaY < 0) {
@@ -1933,34 +1865,6 @@ const gridProto = {
 	    return com.comma(Number(_rowIndex)+1)+"";
 	},
 	
-	listToMap (_list,_option,filterableId) {
-	    var re = {};
-	    if(_option != null){
-	        var _code = '';
-	        var _name = '';
-	        if(_option.metaInfo != null){
-	            _code = _option.metaInfo.codeCd;
-	            _name = _option.metaInfo.codeNm;
-	        }
-	        for(var i=0,j=_list.length; i < j; i++){
-	            var row = _list[i];
-	            if(_code == ''){
-	                re[row.code] = row.codeNm;
-	            }else{
-	                re[row[_code]] = row[_name];
-	            }
-	        }
-	    }else{
-	        for(var i=0,j=_list.length; i < j; i++){
-	            var row = _list[i];
-	            var value = row[filterableId];
-	            re[value] = value;
-	        }
-	    }
-
-	    return re;
-	},
-	
 	//태그정의
 	getInputSelectTag (_label,_req){
 	    ['getInputSelectTag for grid cell'];
@@ -1969,7 +1873,7 @@ const gridProto = {
 	    }else{
 	        _req = "";  
 	    }
-	    var selectTag = '<input type="text" class="moca_select '+_req+'" readonly value="'+_label+'" onclick="'+_id+'.openSelect(this)" >';//onfocus="$m._evt_selectFocus(this)"
+	    var selectTag = '<input type="text" class="moca_select '+_req+'" readonly value="'+_label+'" onclick="'+this.id+'.openSelect(this)" >';//onfocus="$m._evt_selectFocus(this)"
 	    return selectTag;
 	},
 
@@ -1977,7 +1881,7 @@ const gridProto = {
 	    var _type = $m.getType(_thisObj); 
 	    var grd = $m.getTypeObj(_thisObj);
 	    $m._detailViewContentCopy(_thisObj);
-	    grd.attr('selectedDetailView',1);
+	    grd.getAttribute('selectedDetailView',1);
 	    var selectedRealRowIndex = grd.getAttribute("selectedRealRowIndex");
 	    if(selectedRealRowIndex != null){
 	        var foundedRow = grd.find('tbody:first>tr[realrowindex='+selectedRealRowIndex+']');
@@ -1994,7 +1898,7 @@ const gridProto = {
 	        grd.find('#gridDetail2').html('');
 	        grd.find('#gridDetail3').html('');
 	        grd.find('#gridDetail1').html(_html);
-	        $(_thisObj).closest("div[type="+_type+"]").find(".gridDetail_body").css('display','block'); 
+	        _thisObj.closest("div[type="+_type+"]").find(".gridDetail_body").css('display','block'); 
 	    }else{
 	        $m.alert("상세보기할 행을 선택하세요!");
 	    }
@@ -2004,7 +1908,7 @@ const gridProto = {
 	    var _type = $m.getType(_thisObj); 
 	    var grd = $m.getTypeObj(_thisObj);
 	    $m._detailViewContentCopy(_thisObj);
-	    grd.attr('selectedDetailView',2);
+	    grd.getAttribute('selectedDetailView',2);
 	    
 	    var selectedRealRowIndex = grd.getAttribute("selectedRealRowIndex");
 	    var foundedRow = grd.find('tbody:first>tr[realrowindex='+selectedRealRowIndex+']');
@@ -2031,14 +1935,14 @@ const gridProto = {
 	    grd.find('#gridDetail1').html('');
 	    grd.find('#gridDetail3').html('');  
 	    grd.find('#gridDetail2').html(_html);
-	    $(_thisObj).closest("div[type="+_type+"]").find(".gridDetail_body").css('display','block'); 
+	    _thisObj.closest("div[type="+_type+"]").find(".gridDetail_body").css('display','block'); 
 	},
 	
 	_detailView3 (_thisObj) {
 	    var _type = $m.getType(_thisObj); 
 	    var grd = $m.getTypeObj(_thisObj);
 	    $m._detailViewContentCopy(_thisObj);
-	    grd.attr('selectedDetailView',3);
+	    grd.getAttribute('selectedDetailView',3);
 	    var selectedRealRowIndex = grd.getAttribute("selectedRealRowIndex");
 	    var foundedRow = grd.find('tbody:first>tr[realrowindex='+selectedRealRowIndex+']');
 	    var tdArr = foundedRow.find('td');
@@ -2075,22 +1979,23 @@ const gridProto = {
 	    grd.find('#gridDetail1').html('');
 	    grd.find('#gridDetail2').html('');      
 	    grd.find('#gridDetail3').html(_html);
-	    $(_thisObj).closest("div[type="+_type+"]").find(".gridDetail_body").css('display','block');     
+	    _thisObj.closest("div[type="+_type+"]").find(".gridDetail_body").css('display','block');     
 	    
 	},
 	
 	openSelect (_thisObj){
 	    ['grid cell selectbox동적열기'];
-	    var grd = _thisObj.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
-	    var cellTd = _thisObj.parentElement.parentElement;
+	    var grd = _thisObj.closest('div[type="grid"]');
+	    var cellTd = _thisObj.closest('td');
 	    var _displayFormat = cellTd.getAttribute("displayFormat");
 	    var _displayFunction = cellTd.getAttribute("displayFunction");
 	    
-	    var colid = _thisObj.parentElement.parentElement.id;
+	    var colid = cellTd.id;
 	    
-	    var _tbody = $(_thisObj).parent().parent().parent().parent();
-	    var _thisTr = $(_thisObj).parent().parent().parent();
-	    var rowIndex = _tbody.children().index(_thisTr);
+	    var _tbody = _thisObj.closest('tbody');
+	    var _thisTr = _thisObj.closest('tr');
+	    var rowIndex = [..._tbody.children].indexOf(_thisTr);
+
 	    
 	    var _index = rowIndex;
 	    var _realIndex = -1;
@@ -2103,18 +2008,16 @@ const gridProto = {
 	    
 	    
 	    var realRowIndex = grd.getAttribute("selectedRealRowIndex");
-	    //var rowIndex = grd.getAttribute("selectedRowIndex");
-	    //var rowIndex = $(_thisObj).parent().children().index($(_thisObj));
 	    var combo_div = _thisObj.parentElement;
 	    var _html = '';
-	    _html += $m.getSelectTagForCombo(grd.id); 
+	    _html += this.getSelectTagForCombo(grd.id); 
 	    
 	    var selectList = grd[_thisObj.parentElement.parentElement.id];
 	    var list = selectList.list;
 	    var codeOpt = selectList.codeOpt;
 	    var _metaInfo = codeOpt.metaInfo;
-	    var _codeCd = $m.codeCd;
-	    var _codeNm = $m.codeNm;
+	    var _codeCd = this.codeCd;
+	    var _codeNm = this.codeNm;
 	    if(_metaInfo != null){
 	        _codeCd = _metaInfo.codeCd;
 	        _codeNm = _metaInfo.codeNm;
@@ -2137,7 +2040,6 @@ const gridProto = {
 	        }       
 	        _html += '<option value="'+cd+'" '+_selected+'>'+label+'</option>';
 	    }
-	    
 	    for(var i=0; i < list.length; i++){
 	        var json = list[i];
 	        
@@ -2155,8 +2057,8 @@ const gridProto = {
 	    }
 	    _html += '</select>';
 	    combo_div.innerHTML = _html;
-	    $m.setCellData(grd,realRowIndex,colid,combo_div.children[0].value);
-	    $m._selectFocus(combo_div);
+	    this.setCellData(grd,realRowIndex,colid,combo_div.children[0].value);
+	    this._selectFocus(combo_div);
 	},
 	getSelectDivTagForCombo (_label,_req,_cd,_nm,_height){
 	    ['getSelectDivTagForCombo for grid cell'];
@@ -2167,6 +2069,140 @@ const gridProto = {
 	    }   
 	    var combo_div = '<div class="moca_combo '+_req+'" style="height:'+_height+'px" cd="'+_cd+'" nm="'+_nm+'" label="'+_label+'">';
 	    return combo_div;
+	},
+
+	getCellData (grd,rowIndex,colid,_pageId,_srcId){
+	    ['grid cell getCellData'];
+	    if(colid == 'status'){
+	        return grd.list[parseInt(rowIndex)]["_system"][colid];
+	    }else{
+	        return grd.list[parseInt(rowIndex)][colid];
+	    }
+	},
+	
+	setCellData (_grd, _realRowIndex, _colId, _data) {
+	  ['grid setCellData'];
+
+	  // 1) 데이터 반영
+	  if (_colId === 'status') {
+	    _grd.list[_realRowIndex]["_system"][_colId] = _data;
+	  } else {
+	    _grd.list[_realRowIndex][_colId] = _data;
+	  }
+
+	  // 2) targetRow 찾기: tbody:first > tr[realrowindex=...]
+	  var targetRow = _grd.querySelector(
+	    'tbody > tr[realrowindex="' + CSS.escape(String(_realRowIndex)) + '"]'
+	  );
+
+	  var _renderingDiv = _grd.getAttribute('rendering_div');
+
+	  // 3) 셀 렌더링 업데이트
+	  if (targetRow && _grd.cellInfo && _grd.cellInfo[_colId] != null) {
+	    var celltype = _grd.cellInfo[_colId].getAttribute('celltype');
+
+	    if (celltype === 'inputButton') {
+	      if (_renderingDiv) {
+	        var textDiv = targetRow.querySelector(
+	          'td[id="' + CSS.escape(_colId) + '"] div[type="text"]'
+	        );
+	        if (textDiv) {
+	          var v = _grd.list[_realRowIndex][_colId];
+	          textDiv.setAttribute('value', v);
+	          textDiv.innerHTML = v;
+	        }
+	      } else {
+	        var ipt = targetRow.querySelector('td[id="' + CSS.escape(_colId) + '"] input');
+	        if (ipt) ipt.value = _grd.list[_realRowIndex][_colId];
+	      }
+
+	    } else if (celltype === 'input') {
+	      if (_renderingDiv) {
+	        var td = targetRow.querySelector('td[id="' + CSS.escape(_colId) + '"]');
+	        if (td && td.getAttribute('readonly') === 'true') {
+	          // readonly면 div에 표시만
+	          var divAny = td.querySelector('div');
+	          if (divAny) divAny.innerHTML = _data;
+	        } else {
+	          var divInput = targetRow.querySelector(
+	            'td[id="' + CSS.escape(_colId) + '"] div[type="input"]'
+	          );
+
+	          if (divInput) {
+	            divInput.setAttribute('value', _data);
+
+	            var _iptTag = divInput.querySelector('input');
+	            var _displayFunctionApply = td ? td.getAttribute('displayFunctionApply') : null;
+	            var _editormode = td ? td.getAttribute('editormode') : null;
+
+	            if (_editormode === 'true' || $m.getDevice() === 'mobile') {
+	              divInput.innerHTML = _data;
+	            } else if (_displayFunctionApply === 'realtime' && _iptTag) {
+	              _iptTag.value = _data;
+	            }
+	          }
+	        }
+	      } else {
+	        var iptObj = targetRow.querySelector('td[id="' + CSS.escape(_colId) + '"] input');
+	        if (iptObj) {
+	          iptObj.value = _data;
+	        } else {
+	          var td2 = targetRow.querySelector('td[id="' + CSS.escape(_colId) + '"]');
+	          if (td2) td2.innerHTML = _data;
+	        }
+	      }
+	    }
+	  }
+
+	  // 4) status(U/C/빈값) 갱신 로직 (원본 유지)
+	  var oriVal = this.getCellOriData(_grd, _realRowIndex, _colId);
+	  if (oriVal === undefined) oriVal = "";
+
+	  if (_data == null || _data === "null") _data = "";
+
+	  var statusTd = targetRow
+	    ? targetRow.querySelector('td[id="status"]')
+	    : null;
+
+	  if (!(_data === "0" && oriVal === "") && oriVal != _data) {
+	    var status_now = this.getCellData(_grd, _realRowIndex, 'status');
+	    if (status_now !== 'C') {
+	      if (_colId === "status") {
+	        _grd.list[_realRowIndex]["_system"]['status'] = _data;
+	        if (statusTd) statusTd.innerHTML = _data;
+	      } else {
+	        _grd.list[_realRowIndex]["_system"]['status'] = 'U';
+	        if (statusTd) statusTd.innerHTML = 'U';
+	      }
+	    }
+	  } else {
+	    var status_now2 = this.getCellData(_grd, _realRowIndex, 'status');
+	    if (status_now2 !== 'C') {
+	      var cellArray = Object.keys(_grd.cellInfo || {});
+	      var flag = true;
+
+	      for (var i = 0; i < cellArray.length; i++) {
+	        var cl = cellArray[i];
+	        if (cl !== 'status') {
+	          var ov = _grd.ori_list[_realRowIndex][cl];
+	          var currentVal = _grd.list[_realRowIndex][cl];
+
+	          if (ov === undefined) ov = "";
+	          if (currentVal == null || currentVal === "null") currentVal = "";
+
+	          if (!(currentVal === "0" && ov === "") && ov != currentVal) {
+	            flag = false;
+	            break;
+	          }
+	        }
+	      }
+
+	      if (flag) {
+	        _grd.list[_realRowIndex]["_system"]['status'] = '';
+	        if (statusTd) statusTd.innerHTML = '';
+	      }
+	    }
+	  }
 	},
 	
 	_excel_down (_thisObj) {
@@ -2295,64 +2331,6 @@ const gridProto = {
 	        link.click();
 	        document.body.removeChild(link);
 	    }
-	    
-
-	/*
-	    var downloadUrl = "/efms/EFL_CAFL/exceldownload.do";
-	    
-	    var xhttp = new XMLHttpRequest();
-	    var loadingId = $m.loading();
-	    
-	    xhttp.onreadystatechange = function(){
-	        
-	        if(xhttp.readyState == 4 && xhttp.status == 200){
-	            $m.loading(loadingId,0);
-	            var cd = xhttp.getResponseHeader('content-disposition');
-	            var ar = cd.split(';');
-	            var fNameParam = ar[1];
-	            var ar2 = fNameParam.split('=');
-	            var fileName = ar2[1];
-	            var _fileName = decodeURIComponent(fileName);
-	            fileName = _fileName.replace(/\"/g,'');
-	            if($m.isChrome()){
-	                var a = document.createElement('a');
-	                a.id = 'tmpDownload';
-	                a.href = window.URL.createObjectURL(xhttp.response);
-	                a.download = fileName;
-	                a.style.display = 'none';
-	                document.body.appendChild(a);
-	                a.click();
-	            }else{
-	                window.navigator.msSaveOrOpenBlob(xhttp.response,_fileName);
-	            }
-
-	        }else if(xhttp.readyState == 4 && xhttp.status == 500){
-	            $m.loading(loadingId,0);
-	            var blob = new Blob([this.response],{type:'application/json'});
-	            var fileReader = new window.FileReader();
-	            fileReader.readAsText(blob);
-	            fileReader.onloadend = function(){
-	                var msg = JSON.parse(fileReader.result)['msg'];
-	                alert(msg);
-	                return false;
-	            }
-	            //{"statCd":-1,"msg":"파일이 존재하지 않습니다.","reason":"Internal Server Error","path":"/co/coc/FileUpload/downloadFile.do","locale":"ko"}
-	        }
-	    };
-	    xhttp.onerror = function(){
-	    };
-	    xhttp.open("POST",downloadUrl);
-	    //xhttp.setRequestHeader("Content-Type","application/json;charset=UTF-8");
-	    xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	    xhttp.responseType = 'blob';
-	    setTimeout(function(){
-	        if(typeof _parammap == 'object'){
-	            xhttp.send("body="+JSON.stringify(_parammap)+"&header="+JSON.stringify({TRANID:"TRAN_"+$m.now()+$m.shuffleRandom(6)}));
-	        }else{
-	            xhttp.send(_parammap);
-	        }
-	    },1000);
-	*/
 	},
 
 	_fullScreenGrid(_thisObj){
@@ -2410,7 +2388,7 @@ const gridProto = {
 	_uptData (_thisObj) {
 	  ['에디팅데이터 실시간 dataList에 반영'];
 
-	  $m._selectFocus(_thisObj);
+	  this._selectFocus(_thisObj);
 
 	  // ===== jQuery -> DOM =====
 	  var grd = (_thisObj instanceof Element) ? _thisObj.closest('div[type="grid"]') : null;
@@ -2435,7 +2413,7 @@ const gridProto = {
 	  var srcEl = evt ? (evt.target || evt.srcElement) : null;
 
 	  if (_thisObj && _thisObj.tagName === "TD") {
-	    $m._selectFocus(_thisObj);
+	    this._selectFocus(_thisObj);
 
 	    // TD 안 체크박스 토글
 	    var chkbox = _thisObj.querySelector(".moca_checkbox_grid>input");
@@ -2474,10 +2452,10 @@ const gridProto = {
 	    if (_thisObj.checked) {
 	      var vTrue = td ? td.getAttribute("trueValue") : null;
 	      if (vTrue == null) vTrue = "true";
-	      $m.setCellData(grd, realRowIndex, colid, vTrue);
+	      this.setCellData(grd, realRowIndex, colid, vTrue);
 	    } else {
 	      var vFalse = td ? td.getAttribute("falseValue") : null;
-	      $m.setCellData(grd, realRowIndex, colid, vFalse);
+	      this.setCellData(grd, realRowIndex, colid, vFalse);
 	    }
 	    return;
 	  }
@@ -2486,7 +2464,7 @@ const gridProto = {
 	  if (_thisEvtObj != null && _thisEvtObj.type === "radio") {
 	    if (_thisEvtObj.checked) {
 	      var _value = _thisEvtObj.value;
-	      $m.setCellData(grd, realRowIndex, colid, _value);
+	      this.setCellData(grd, realRowIndex, colid, _value);
 	    }
 	    return;
 	  }
@@ -2496,7 +2474,7 @@ const gridProto = {
 	    var prev = _thisEvtObj.previousElementSibling;
 	    if (prev && prev.type === "radio" && prev.checked) {
 	      var _value2 = prev.value;
-	      $m.setCellData(grd, realRowIndex, colid, _value2);
+	      this.setCellData(grd, realRowIndex, colid, _value2);
 	      return;
 	    }
 	  }
@@ -2505,14 +2483,14 @@ const gridProto = {
 	  if (_thisObj && _thisObj.tagName === "TD") {
 	    var inputInTd = _thisObj.querySelector("input");
 	    if (inputInTd) {
-	      // jQuery: .attr('value') (속성) vs .value(현재값)
-	      // 원본은 attr('value')를 썼으니 동일하게 attribute 우선
+	      // jQuery: .getAttribute('value') (속성) vs .value(현재값)
+	      // 원본은 getAttribute('value')를 썼으니 동일하게 attribute 우선
 	      var _value3 = inputInTd.getAttribute("value");
 	      if (_value3 == null) _value3 = inputInTd.value;
-	      $m.setCellData(grd, realRowIndex, colid, _value3);
+	      this.setCellData(grd, realRowIndex, colid, _value3);
 	    } else {
 	      var _value4 = _thisObj.innerHTML;
-	      $m.setCellData(grd, realRowIndex, colid, _value4);
+	      this.setCellData(grd, realRowIndex, colid, _value4);
 	    }
 	    return;
 	  }
@@ -2523,9 +2501,9 @@ const gridProto = {
 
 	  if ($m.trim(displayfunctionValue) !== '' && $m.trim(displayFunctionApplyValue) === 'realtime') {
 	    var reValue = eval(displayfunctionValue)(_thisObj.value);
-	    $m.setCellData(grd, realRowIndex, colid, reValue);
+	    this.setCellData(grd, realRowIndex, colid, reValue);
 	  } else {
-	    $m.setCellData(grd, realRowIndex, colid, _thisObj.value);
+	    this.setCellData(grd, realRowIndex, colid, _thisObj.value);
 	  }
 	},
 
@@ -2726,7 +2704,437 @@ const gridProto = {
 		  __comp.parentElement.innerHTML = __value;
 		}
   	},
+
+	doFilterForSingle (_thisObj,_e,grd) {
+	    //첫적용
+	    com.stopEvent(_e);
+	    var o = _thisObj.closest('TH');
+	    var _id = o.getAttribute('id');
+	    var itemTable = _thisObj.closest('.moca_grid_body').querySelectorAll(".itemTable[thid="+_id+"]");
+	    
+	    //if(itemTable.length == 0){
+	    //onScroll이벤트로 인해 오픈할때마다 새로그림
+	    if(true){
+	        var offsetBasisObj = _thisObj.closest('.moca_grid_body');
+	        var offsetBasisOffset = com.offset(offsetBasisObj);
+	        var reWidth = com.getSize(o).width;
+	        var reJson = com.offset(o);
+	        var reHeight = com.getSize(o).height;
+	        //var grd = $(_thisObj).closest('div[type=grid]');
+	        //if(grd[0].nowlist == null){
+	            //grd[0].nowlist = grd[0].list.clone();
+	            grd.nowlist = grd.list;
+	        //}
+	        
+	        var td = grd.cellInfo[o.getAttribute("filterableId")];
+	        var _displayFormat = td.getAttribute("displayFormat");
+	        var _celltype = td.getAttribute("celltype");
+	    
+	        var column_map = grd[o.getAttribute("filterableId")]['map'];
+	        if(column_map == null){
+	            column_map = {};
+	        }
+	        var _filterMap_cdNm = grd[o.getAttribute("filterableId")]['filterableMap'];
+	        var _filterMap = {};
+	        var kks = Object.keys(_filterMap_cdNm);
+	        for(var i=0; i < kks.length; i++){
+	            var _k = kks[i];
+	            _filterMap[_k] = '';
+	        }
+	            
+	        var _itemTable = '';
+	        var filter;
+	        if(grd.filter != null){
+	            filter = grd.filter[_id];
+	        }else{
+	            grd['filter'] = {};  
+	        }
+
+	        var ks = Object.keys(_filterMap);
+	        var isAllChecked = 'checked';
+	        for(var i=0; i < ks.length; i++){
+	            var k = ks[i];
+	            var _cd = k;
+	            _cd = _cd.replace(/\(.*?\) (.*?)$/g,'$1');
+	            var _nm = _filterMap_cdNm[k];
+	            
+	    
+	            var _reLabel = _nm;
+	            _reLabel = _reLabel.trim();
+
+	            if(filter != null && filter.indexOf(_cd) > -1){
+	                checkedStr = "checked";
+	            }else if(filter == null){
+	                checkedStr = "checked";
+	            }else{
+	                isAllChecked = '';
+	                checkedStr = '';
+	            }
+	            
+	            if(checkedStr == "checked"){
+	                _itemTable += '<li class="on">';
+	            }else{
+	                _itemTable += '<li>';   
+	            }
+	            
+	            _itemTable += '<input type="checkbox" id="filterableCheck_'+_id+'_'+_cd+'" name="filterableCheck_'+_id+'" value="'+_cd+'" '+checkedStr+'>';
+	            _itemTable += '<label type="checkbox" for="filterableCheck_'+_id+'_'+_cd+'" >'+_reLabel+'</label>'; 
+	            _itemTable += '</li>';
+	        }
+	        
+	        
+	        var _all = '';
+	        _all += '<div class="filterheader">';   
+	        _all += '<span>';
+	        _all += '<input type="checkbox" id="all_filterableCheck_'+_id+'" name="all_filterableCheck_'+_id+'" '+isAllChecked+' class="allcheck">';
+	        _all += '<label type="checkbox" for="all_filterableCheck_'+_id+'"  ></label>';
+	        _all += '</span>';
+	        _all += '<div class="fr">';
+	        if(grd[o.getAttribute("filterableId")].filterType != 'countableMap'){
+	            _all += '<button type="button" class="moca_ibn_btn mr3" onclick="$m.filterSort(this,\''+_id+'\',\''+o.getAttribute("filterableId")+'\')" style="">건수순</button>';
+	        }else{
+	            _all += '<button type="button" class="moca_ibn_btn mr3" onclick="$m.filterAlpha(this,\''+_id+'\',\''+o.getAttribute("filterableId")+'\')" style="">가나다순</button>';
+	        }
+	        _all += '<button type="button" class="moca_ibn_btn mr3" onclick="$m.filterApply(this,\''+_id+'\',\''+o.getAttribute("filterableId")+'\')" style="">적용</button>'; 
+	        _all += '<button type="button" class="moca_ibn_btn mr3 bd0" onclick="$m.expand(this,\''+_id+'\',\''+o.getAttribute("filterableId")+'\')" style=""><i class="fas fa-angle-double-down"></i></button>';
+	        _all += '</div>';
+	        _all += '<input type="text" class="moca_input req" style="" value="" onkeyup="$m.realtimeSearch(this)" placeholder="검색어를 입력하세요">';
+	        _all += '</div>';
+	        
+	        _itemTable = _all+'<ul>'+_itemTable+'</ul>';            
+	        var tmp = document.createElement( 'div' );
+	        tmp.setAttribute("thid",o.getAttribute('id'));
+	        tmp.setAttribute("class","itemTable");
+	        tmp.innerHTML = _itemTable;         
+	        this.filterClose();
+	        _thisObj.closest('.moca_grid_body').append(tmp);
+	        grd.itemTable = itemTable;
+	        
+	        itemTable = _thisObj.closest('.moca_grid_body').find(".itemTable[thid="+o.getAttribute('id')+"]");
+	        $(itemTable).find("input[type=checkbox][name=all_filterableCheck_"+_id+"]").off('click').on('click',function(){
+	            var arrJq =  $(this).closest('div').next().find('input[type=checkbox]');
+	            if(this.checked){
+	                arrJq.prop('checked',true);
+	                arrJq.closest('li').addClass('on');
+	            }else{
+	                arrJq.prop('checked',false);
+	                arrJq.closest('li').removeClass('on');
+	            }
+	        });     
+
+	        $(itemTable).find("input[type=checkbox][name=filterableCheck_"+_id+"]").off('click').on('click',function(){
+	            var ul = $(this).closest('ul');
+	            var arr_all = ul.find('input[type=checkbox]')
+	            var arr_checked = ul.find('input[type=checkbox]:checked');
+	            
+	            var allCheckbox = ul.prev().find("input[type=checkbox][name=all_filterableCheck_"+_id+"]");
+	            
+	            if(arr_all.length == arr_checked.length){
+	                allCheckbox.prop('checked',true);
+	                allCheckbox.prop('indeterminate',false);
+	            }else if(arr_all.length == 0){
+	                allCheckbox.prop('checked',false);
+	                allCheckbox.prop('indeterminate',false);
+	            }else{
+	                allCheckbox.prop('checked',false);
+	                if(arr_checked.length == 0){
+	                    allCheckbox.prop('indeterminate',false);
+	                }else{
+	                    allCheckbox.prop('indeterminate',true);
+	                }
+	            }
+	            $m.filterSetColor(this);
+	        });
+	        
+	        
+	        itemTable.css('position','fixed');
+	        itemTable.width(reWidth+8);
+	        itemTable.css('top',(offsetBasisObj.scrollTop()+reJson.top+parseInt(reHeight))+'px');
+	        itemTable.css('left',(offsetBasisObj.scrollLeft()+reJson.left)+'px');
+	        itemTable.css('z-index','6200');
+	        
+	        
+	        var ul = itemTable.find('.filterheader').next();
+	        var arr_all = ul.find('input[type=checkbox]')
+	        var arr_checked = ul.find('input[type=checkbox]:checked');
+	        
+	        var allCheckbox = ul.prev().find("input[type=checkbox][name=all_filterableCheck_"+_id+"]");
+	        
+	        if(arr_all.length == arr_checked.length){
+	            allCheckbox.prop('checked',true);
+	            allCheckbox.prop('indeterminate',false);
+	        }else if(arr_all.length == 0){
+	            allCheckbox.prop('checked',false);
+	            allCheckbox.prop('indeterminate',false);
+	        }else{
+	            allCheckbox.prop('checked',false);
+	            allCheckbox.prop('indeterminate',true);
+	        }
+	        
+	        $(itemTable).find('i').removeClass('fa-angle-double-down');
+	        $(itemTable).find('i').addClass('fa-angle-double-up');
+	        var grd = grd[0];
+	        var ul = $(itemTable).find('div.filterheader').next();
+	        var ul_top = com.offset(ul).top;
+	        var top_position = ul.getAttribute("top_position");
+	        
+	        if(top_position == null){
+	            ul.getAttribute("top_position",ul_top);
+	        }
+	        var h = com.offset(grd).top + com.getSize(grd).height - Number(ul.getAttribute("top_position"))-5;
+	        $(itemTable).find('div.filterheader').next().css('max-height',h+'px');
+	        
+	        
+	        //$('.itemTable').css('opacity',0.9);           
+	    }else{
+	        if(itemTable.css('display') != 'none'){
+	            itemTable.css('display','none');
+	        }else{
+	            this.filterClose();
+	            itemTable.css('display','block');
+	        }
+	    }
+	    itemTable.off("click").on('click',function(){
+	        com.stopEvent(event);
+	    });
+	},
+
+	getCellOriData (grd,rowIndex,colid){
+	    ['grid cell getCellOriData'];
+	    if(colid == 'status'){
+	        return grd.ori_list[parseInt(rowIndex)]["_system"][colid];
+	    }else{
+	        return grd.ori_list[parseInt(rowIndex)][colid];
+	    }
+	},
 	
+	filterClose (_o){
+		document.querySelectorAll('.itemTable').forEach(el => {
+		  el.style.display = 'none';
+		});
+    },
+
+	doFilter (_thisObj) {
+		// _thisObj가 문자열이면 header id로 넘어온 케이스
+		if (typeof _thisObj === 'string') {
+		  var headerEl = document.getElementById(_thisObj);
+		  _thisObj = headerEl ? headerEl.querySelector('.moca_grid_filter_btn') : null;
+		}
+		if (!_thisObj) return;
+
+		// grd / th 찾기
+		var grd = _thisObj.closest('div[type="grid"]');     // DOM
+		var o = _thisObj.closest('TH');                     // DOM
+		var _headerId = o ? o.getAttribute('id') : null;
+
+		// 선택한 필터가 최종필터가 아닐때!
+		if (
+		  grd &&
+		  grd.appliedFilterMap != null &&
+		  _headerId != null &&
+		  grd.appliedFilterMap[_headerId] != null &&
+		  (grd.appliedFilterMap[_headerId].idx < grd.appliedFilterArr.length)
+		) {
+		  $m.filterRemoveAll(grd);
+		  // $m.drawGrid(grd.id, grd.ori_list);
+		}
+
+		// myIdx
+		var myIdx;
+		if (grd && grd['filterIdx'] != null) {
+		  myIdx = grd['filterIdx'][_headerId];
+		}
+
+		// 원본이 if(true)라서 항상 여기로 감
+		if (true) {
+		  this.doFilterForSingle(_thisObj, event, grd);
+		} else {
+		  if (myIdx != null) {
+		    $m.doFilterForSingle(_thisObj, event, grd);
+		  } else {
+		    $m.question(
+		      '멀티필터로 적용하시겠습니까?',
+		      function (result) {
+		        if (result !== '3') {
+		          if (result === '1') {
+		            var list = grd.list;
+		            var jq_grd_2 = grd; // DOM이지만 원본 변수명 유지
+
+		            var ks = Object.keys(jq_grd_2.cellInfo);
+		            var filterArr = [];
+		            var filterThArr = [];
+
+		            // jQuery: $(jq_grd_2).find('thead:first th[filterableId]')
+		            var thArray = jq_grd_2.querySelectorAll('thead th[filterableId]');
+
+		            for (var i = 0; i < thArray.length; i++) {
+		              var aTh = thArray[i];
+		              var filterableId = aTh.getAttribute('filterableId');
+		              filterArr.push(filterableId);
+		              filterThArr.push(aTh.id);
+
+		              if (jq_grd_2[filterableId] == null) {
+		                jq_grd_2[filterableId] = {};
+		              }
+		              jq_grd_2[filterableId]['filterableMap'] = {};
+		            }
+
+		            /*
+		             * full loop area
+		             */
+		            for (var i = 0; i < list.length; i++) {
+		              var row = list[i];
+		              row["_system"]["realIndex"] = i;
+
+		              for (var k = 0; k < filterArr.length; k++) {
+		                var tdId = filterArr[k];
+		                var tdValue = row[tdId];
+
+		                jq_grd_2[tdId]['filterableMap'][tdValue] =
+		                  ($m.getNumber(jq_grd_2[tdId]['filterableMap'][tdValue]) + 1);
+
+		                if (i === list.length - 1) {
+		                  jq_grd_2[tdId]['filterableMap'] = $m.sortObject(jq_grd_2[tdId]['filterableMap']);
+		                  jq_grd_2[tdId]['countableMap'] = {};
+
+		                  var m = jq_grd_2[tdId].filterableMap;
+		                  var keys = Object.keys(m);
+
+		                  for (var j = 0; j < keys.length; j++) {
+		                    var key = keys[j];
+		                    var val = (m != null) ? m[key] : "";
+		                    var reKey = "(" + val + "건) " + key;
+
+		                    jq_grd_2[tdId]['countableMap'][reKey] =
+		                      key + " (" + $m.comma(val) + "건)";
+		                  }
+
+		                  jq_grd_2[tdId]['countableMap'] =
+		                    $m.sortObjectNumString(jq_grd_2[tdId]['countableMap']);
+
+		                  var keys2 = Object.keys(jq_grd_2[tdId]['countableMap']);
+		                  for (var j = 0; j < keys2.length; j++) {
+		                    var key2 = keys2[j];
+		                    jq_grd_2[tdId]['countableMap'][key2] = (j + 1) + "." + key2;
+		                  }
+
+		                  jq_grd_2[tdId]['alphabeticalMap'] = jq_grd_2[tdId]['filterableMap'];
+		                  jq_grd_2[tdId].filterType = 'alphabeticalMap';
+		                }
+		              }
+		            }
+
+		            for (var i = 0; i < filterArr.length; i++) {
+		              var tdId2 = filterArr[i];
+		              var thId = filterThArr[i];
+
+		              var m2 = jq_grd_2[tdId2].filterableMap;
+		              var keys3 = Object.keys(jq_grd_2[tdId2]['filterableMap']);
+
+		              for (var j = 0; j < keys3.length; j++) {
+		                var key3 = keys3[j];
+		                var val3 = (m2 != null) ? m2[key3] : "";
+		                jq_grd_2[tdId2]['filterableMap'][key3] =
+		                  (j + 1) + "." + key3 + " (" + $m.comma(val3) + "건)";
+		              }
+
+		              // jQuery: $(jq_grd_2).find(".itemTable[thid="+thId+"]").remove();
+		              jq_grd_2.querySelectorAll('.itemTable[thid="' + CSS.escape(thId) + '"]').forEach(function (el) {
+		                el.remove();
+		              });
+
+		              // jQuery: $(jq_grd_2)[0].filter = null;
+		              jq_grd_2.filter = null;
+		            }
+
+		            // filter 구성 end
+		            $m.doFilterForSingle(_thisObj, event, grd);
+
+		          } else if (result === '2') {
+		            this.filterRemoveAll(grd);
+		            this.drawGrid(grd.id, grd.ori_list);
+		            $m.doFilterForSingle(_thisObj, event, grd);
+		          }
+		        }
+		      },
+		      "멀티필터로적용",
+		      "단일필터로적용",
+		      "취소"
+		    );
+		  }
+		}
+	},
+	
+	filterRemoveAll (grd,_pageId,_srcId){
+	    ['현재 그리드의 모든 필터를 제거합니다.']
+	    if(grd.length == null){
+	        grd = $(grd);
+	    }
+	    grd[0].appliedFilterMap = null;
+	    grd[0].appliedFilterArr = null;
+	    delete grd[0]['filterMaxIdx'];
+	    grd[0]['filterIdx'] = {};
+	    grd[0].filter = {};
+	    var thArray = grd.find('thead:first th[filterableId]');
+	    for(var i=0; i < thArray.length; i++){
+	        var aTh = thArray[i];
+	        var hObj = $('#'+aTh.id);
+	        var filterableId = aTh.getAttribute("filterableId");
+	        hObj.find('.moca_grid_filter_btn').removeClass('multi');
+	        hObj.find('i').text('');
+	        if(i == thArray.length-1){
+	            grd[0].filterMaxIdx = null;
+	        }
+	    }
+	},
+	
+	getSelectTagForCombo (_id){
+	    ['getSelectTagForCombo for grid cell'];
+	    var selectTag = '<select name="sel_tree1" id="'+('sub_'+_id)+'" class="moca_select"  onchange="'+_id+'.gridCell_selectChange(this)" onblur="'+_id+'.closeSelect(this)" >';
+	    return selectTag;
+	},
+	
+	closeSelect (_thisObj){
+	    ['grid cell selectbox동적닫기'];
+	    setTimeout(function(){
+	        try{
+	            var combo_div = _thisObj.parentElement;
+	            combo_div.innerHTML = this.getInputSelectTag(combo_div.getAttribute("label"));
+	        }catch(e){
+	            //thisObj가 사라졌을때(input으로 바뀔수있음 예외가 발생
+	        }
+	    },200);
+	},
+	
+	gridCell_selectChange (_thisObj){
+	    ['grid cell selectbox change!'];
+		debugger;
+	    var colid = _thisObj.closest('td').id;
+	    var _tbody = _thisObj.closest('tbody');
+	    var grd = _thisObj.closest('div[type="grid"');
+	    var _thisTr = _thisObj.closest('tr');
+	    var _onSelectChanged = grd.getAttribute("onSelectChanged");
+	    
+
+	    var realRowIndex = grd.getAttribute("selectedRealRowIndex");
+	    //var rowIndex = grd.getAttribute("selectedRowIndex");  
+	    
+	    var comboObj = _thisObj.parentElement;
+	    var beforeCd = comboObj.getAttribute("cd");
+	    var beforeNm = comboObj.getAttribute("nm"); 
+	    var label = _thisObj.options[_thisObj.selectedIndex]?.text || '';
+	    comboObj.setAttribute("cd",_thisObj.value);
+	    comboObj.setAttribute("nm",label.replace(_thisObj.value,'').trim());
+	    comboObj.setAttribute("label",label);
+	    
+	    var combo_div = _thisObj.parentElement;
+	    combo_div.innerHTML = this.getInputSelectTag(label);
+	    this.setCellData(grd,realRowIndex,colid,combo_div.getAttribute('cd'));
+	    
+	    if(_onSelectChanged && _onSelectChanged.trim() != '' ){
+	        eval(_onSelectChanged)(realRowIndex,colid,beforeCd,beforeNm,_thisObj.value,label);
+	    }
+	},
 
 }
 
