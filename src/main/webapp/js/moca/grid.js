@@ -241,8 +241,8 @@ const gridProto = {
 	    var __ondblclick = '';
 	    var __swipeStyle = '';
 	    if(com.getDevice() != 'pc'){
-	    	__onclick = 'onclick="$m.swaipClickScroll(this)"';
-	    	__ondblclick = 'ondblclick="$m.swaipDblScroll(this)"';
+	    	__onclick = 'onclick="'+_id+'.swaipClickScroll(this)"';
+	    	__ondblclick = 'ondblclick="'+_id+'.swaipDblScroll(this)"';
 	    	__swipeStyle = 'width: 100%; left: 0px;';
 	    }    
 	    
@@ -271,12 +271,12 @@ const gridProto = {
 	    _html +='   <div class="gridDetail_body" style="display:none" grdkey="'+_id+'"> ';
 	    _html +='       <div class="moca_grid_toolbar_detail"> ';
 	    _html +='           <div class="rta"> ';
-	    _html +='               <button type="button" id="btn_colTh1" class="button colTh1" style="" title="그리드th1단"  onclick="$m._detailView1(this)"></button> ';
-	    _html +='               <button type="button" id="btn_colTh2" class="button colTh2" style="" title="그리드th2단"  onclick="$m._detailView2(this)"></button> ';
+		_html += '               <button type="button" id="btn_colTh1" class="button colTh1" style="" title="그리드th1단"  onclick="' + _id +'._detailView1(this)"></button> ';
+	    _html +='               <button type="button" id="btn_colTh2" class="button colTh2" style="" title="그리드th2단"  onclick="'+_id+'._detailView2(this)"></button> ';
 	    if(com.getDevice() != "mobile"){
-	    	_html +='           <button type="button" id="btn_colTh3" class="button colTh3" style="" title="그리드th3단"  onclick="$m._detailView3(this)"></button>'; 
+	    	_html +='           <button type="button" id="btn_colTh3" class="button colTh3" style="" title="그리드th3단"  onclick="'+_id+'._detailView3(this)"></button>'; 
 	    }
-	    _html +='               <button type="button" id="" class="button grid_detail_close" style="" title="" onclick="$m._detailViewClose(this)"></button>';
+	    _html +='               <button type="button" id="" class="button grid_detail_close" style="" title="" onclick="'+_id+'._detailViewClose(this)"></button>';
 	    _html +='           </div> ';   
 	    _html +='       </div> ';
 	    _html +='       <table class="gridDetail mb5" id="gridDetail1"> ';
@@ -451,9 +451,9 @@ const gridProto = {
 
 		      _after = '<div class="moca_checkbox_grid" >';
 		      _after += '<input type="checkbox" class="moca_checkbox_input allcheck" name="cbxAll" ';
-		      _after += 'id="cbx_' + $m.pageId + '_' + $m.srcId + '_' + _id + '" ';
+		      _after += 'id="cbx_' + this.pageId + '_' + this.srcId + '_' + _id + '" ';
 		      _after += 'grd_id=' + _id + '>';
-		      _after += '<label class="moca_checkbox_label" for="cbx_' + $m.pageId + '_' + $m.srcId + '_' + _id + '"  >label</label>';
+		      _after += '<label class="moca_checkbox_label" for="cbx_' + this.pageId + '_' + this.srcId + '_' + _id + '"  >label</label>';
 		      _after += '</div>';
 		    } else {
 		      _after += '<div class="moca_grid_sort_box">';
@@ -468,8 +468,8 @@ const gridProto = {
 
 		    var filterable = aTh.getAttribute("filterable");
 		    if (filterable == "true") {
-		      _after += '<button class="moca_grid_filter_btn" onclick="'+_id+'.doFilter(this)" ondblclick="$m.doFilterDblclick(this)">필터</button>';
-		      _after += '<i onclick="$m.filterRemoveAllConfirm(this);"></i>';
+		      _after += '<button class="moca_grid_filter_btn" onclick="'+_id+'.doFilter(this)" ondblclick="'+_id+'.doFilterDblclick(this)">필터</button>';
+		      _after += '<i onclick="'+_id+'.filterRemoveAllConfirm(this);"></i>';
 		    }
 
 		    aTh.innerHTML = _after;
@@ -622,7 +622,7 @@ const gridProto = {
 	        x1Obj.checkedStr = '';
 	    }
 	    //if(x1Obj.onclick != null && x1Obj.onclick != ''){
-	        //x1Obj.onclickStr = 'onclick="$m.setter_pageId(\''+$m.pageId+'\',\''+$m.srcId+'\',\''+x1Obj.onclick+'\',this)"'; 
+	        //x1Obj.onclickStr = 'onclick="$m.setter_pageId(\''+this.pageId+'\',\''+this.srcId+'\',\''+x1Obj.onclick+'\',this)"'; 
 	    //}else{
 	        x1Obj.onclickStr = '';
 	    //}
@@ -674,7 +674,7 @@ const gridProto = {
 	        x1Obj.checkedStr = '';
 	    }
 	    //if(x1Obj.onclick != null && x1Obj.onclick != ''){
-	        //x1Obj.onclickStr = 'onclick="$m.setter_pageId(\''+$m.pageId+'\',\''+$m.srcId+'\',\''+x1Obj.onclick+'\',this)"'; 
+	        //x1Obj.onclickStr = 'onclick="$m.setter_pageId(\''+this.pageId+'\',\''+this.srcId+'\',\''+x1Obj.onclick+'\',this)"'; 
 	    //}else{
 	        x1Obj.onclickStr = '';
 	    //}
@@ -698,7 +698,7 @@ const gridProto = {
 	        x1Obj.checkedStr = '';
 	    }
 	    //if(x1Obj.onclick != null && x1Obj.onclick != ''){
-	        //x1Obj.onclickStr = 'onclick="$m.setter_pageId(\''+$m.pageId+'\',\''+$m.srcId+'\',\''+x1Obj.onclick+'\',this)"'; 
+	        //x1Obj.onclickStr = 'onclick="$m.setter_pageId(\''+this.pageId+'\',\''+this.srcId+'\',\''+x1Obj.onclick+'\',this)"'; 
 	    //}else{
 	        x1Obj.onclickStr = '';
 	    //}
@@ -724,7 +724,7 @@ const gridProto = {
 	        x1Obj.checkedStr = '';
 	    }
 	    //if(x1Obj.onclick != null && x1Obj.onclick != ''){
-	        //x1Obj.onclickStr = 'onclick="$m.setter_pageId(\''+$m.pageId+'\',\''+$m.srcId+'\',\''+x1Obj.onclick+'\',this)"'; 
+	        //x1Obj.onclickStr = 'onclick="$m.setter_pageId(\''+this.pageId+'\',\''+this.srcId+'\',\''+x1Obj.onclick+'\',this)"'; 
 	    //}else{
 	        x1Obj.onclickStr = '';
 	    //}
@@ -761,7 +761,7 @@ const gridProto = {
 	        x1Obj.checkedStr = '';
 	    }
 	    //if(x1Obj.onclick != null && x1Obj.onclick != ''){
-	        //x1Obj.onclickStr = 'onclick="$m.setter_pageId(\''+$m.pageId+'\',\''+$m.srcId+'\',\''+x1Obj.onclick+'\',this)"'; 
+	        //x1Obj.onclickStr = 'onclick="$m.setter_pageId(\''+this.pageId+'\',\''+this.srcId+'\',\''+x1Obj.onclick+'\',this)"'; 
 	    //}else{
 	        x1Obj.onclickStr = '';
 	    //}
@@ -791,7 +791,7 @@ const gridProto = {
 	    var _html = '';
 
 	    if(x1Obj.onclick != null && x1Obj.onclick != ''){
-	        x1Obj.onclickStr = 'onclick="'+x1Obj.onclick+'(\''+$m.pageId+'\',\''+$m.srcId+'\',this)"'; 
+	        x1Obj.onclickStr = 'onclick="'+x1Obj.onclick+'(\''+this.pageId+'\',\''+this.srcId+'\',this)"'; 
 	    }else{
 	        x1Obj.onclickStr = '';
 	    }
@@ -913,6 +913,16 @@ const gridProto = {
 	
 	draw(_list,_response){
 		_grdId = this;
+       this.drawGrid_inside(_grdId,_list,_list,this.pageId,this.srcId,_response);
+       if(typeof _grdId == 'object'){
+           com.getObj(_grdId.id+"_moca_scroll_y",null,this.pageId,this.srcId).scrollTop = 0; 
+       }else{
+           com.getObj(_grdId+"_moca_scroll_y",null,this.pageId,this.srcId).scrollTop = 0; 
+       }
+       
+   },
+   
+   drawGrid (_grdId,_list,_response){
        this.drawGrid_inside(_grdId,_list,_list,this.pageId,this.srcId,_response);
        if(typeof _grdId == 'object'){
            com.getObj(_grdId.id+"_moca_scroll_y",null,this.pageId,this.srcId).scrollTop = 0; 
@@ -1657,12 +1667,12 @@ const gridProto = {
              _inTag5 = _reLabel6;
            } else {
              _inTag5 = '<div class="moca_checkbox_grid">';
-             _inTag5 += '<input type="checkbox" class="moca_checkbox_input" name="cbx" id="cbx_' + $m.pageId + "_" + $m.srcId + "_" + _grd.id + "_" + _nowIndex + '" grd_id=' + _grd.id + ' value="' + _trueValue + '" ' + isChecked + " " + isDisabled2 + " >";
-             _inTag5 += '<label class="moca_checkbox_label" for="cbx_' + $m.pageId + "_" + $m.srcId + "_" + _grd.id + "_" + _nowIndex + '"  >label</label>';
+             _inTag5 += '<input type="checkbox" class="moca_checkbox_input" name="cbx" id="cbx_' + this.pageId + "_" + this.srcId + "_" + _grd.id + "_" + _nowIndex + '" grd_id=' + _grd.id + ' value="' + _trueValue + '" ' + isChecked + " " + isDisabled2 + " >";
+             _inTag5 += '<label class="moca_checkbox_label" for="cbx_' + this.pageId + "_" + this.srcId + "_" + _grd.id + "_" + _nowIndex + '"  >label</label>';
              _inTag5 += "</div>";
            }
 
-           row += '<td id="' + _id + '" class="' + _class + '" name="' + _name + '"  toolTip="' + _toolTip + '" celltype="' + _celltype + '" style="' + _style + '"  readOnly="' + readOnly + '" trueValue="' + _trueValue + '" falseValue="' + _falseValue + '"  disabledFunction="' + _disabledFunction + '" onclick="'+_id+'.defaultCellClick(this);" >' + _inTag5 + "</td>";
+           row += '<td id="' + _id + '" class="' + _class + '" name="' + _name + '"  toolTip="' + _toolTip + '" celltype="' + _celltype + '" style="' + _style + '"  readOnly="' + readOnly + '" trueValue="' + _trueValue + '" falseValue="' + _falseValue + '"  disabledFunction="' + _disabledFunction + '" onclick="'+_grd.id+'.defaultCellClick(this);" >' + _inTag5 + "</td>";
 
          // ===== radio =====
          } else if (_celltype == "radio") {
@@ -1688,13 +1698,13 @@ const gridProto = {
              var _rdoArr = JSON.parse(cellTd.getAttribute("itemset"));
              for (var r = 0; r < _rdoArr.length; r++) {
                var isChecked2 = (_row["TEST_YN"] == _rdoArr[r].value) ? "checked" : "";
-               _inTag6 += '<input type="radio" class="moca_radio" name="rdo__' + $m.pageId + "_" + _grd.id + "_" + _nowIndex + '" id="rdo_' + r + "_" + $m.pageId + "_" + _grd.id + "_" + _nowIndex + _rdoArr[r].value + '" grd_id=' + _grd.id + ' value="' + _rdoArr[r].value + '" ' + isChecked2 + " " + isDisabled3 + " >";
-               _inTag6 += '<label class="moca_radio_label" for="rdo_' + r + "_" + $m.pageId + "_" + _grd.id + "_" + _nowIndex + _rdoArr[r].value + '"  >' + _rdoArr[r].label + "</label>";
+               _inTag6 += '<input type="radio" class="moca_radio" name="rdo__' + this.pageId + "_" + _grd.id + "_" + _nowIndex + '" id="rdo_' + r + "_" + this.pageId + "_" + _grd.id + "_" + _nowIndex + _rdoArr[r].value + '" grd_id=' + _grd.id + ' value="' + _rdoArr[r].value + '" ' + isChecked2 + " " + isDisabled3 + " >";
+               _inTag6 += '<label class="moca_radio_label" for="rdo_' + r + "_" + this.pageId + "_" + _grd.id + "_" + _nowIndex + _rdoArr[r].value + '"  >' + _rdoArr[r].label + "</label>";
              }
              _inTag6 += "</div>";
            }
 
-           row += '<td id="' + _id + '" class="' + _class + '" name="' + _name + '"  toolTip="' + _toolTip + '" celltype="' + _celltype + '" style="' + _style + '"  readOnly="' + readOnly + '" disabledFunction="' + _disabledFunction + '" onclick="'+_id+'.defaultCellClick(this);" >' + _inTag6 + "</td>";
+           row += '<td id="' + _id + '" class="' + _class + '" name="' + _name + '"  toolTip="' + _toolTip + '" celltype="' + _celltype + '" style="' + _style + '"  readOnly="' + readOnly + '" disabledFunction="' + _disabledFunction + '" onclick="'+_grd.id+'.defaultCellClick(this);" >' + _inTag6 + "</td>";
          }
        }
      }
@@ -1878,36 +1888,36 @@ const gridProto = {
 	},
 
 	_detailView1 (_thisObj) {
-	    var _type = $m.getType(_thisObj); 
-	    var grd = $m.getTypeObj(_thisObj);
-	    $m._detailViewContentCopy(_thisObj);
+	    var _type = com.getType(_thisObj); 
+	    var grd = com.getTypeObj(_thisObj);
+	    this._detailViewContentCopy(_thisObj);
 	    grd.getAttribute('selectedDetailView',1);
 	    var selectedRealRowIndex = grd.getAttribute("selectedRealRowIndex");
 	    if(selectedRealRowIndex != null){
-	        var foundedRow = grd.find('tbody:first>tr[realrowindex='+selectedRealRowIndex+']');
-	        var tdArr = foundedRow.find('td');
-	        $m.removeCol(tdArr);
+	        var foundedRow = grd.querySelector('tbody > tr[realrowindex="' + selectedRealRowIndex + '"]');
+	        var tdArr = foundedRow.querySelector('td');
+	        this.removeCol(tdArr);
 	        var _html = '';
 	        for(var i=0;i < tdArr.length; i++){
 	            var aTd = tdArr[i];
 	            _html +='           <tr realrowindex='+selectedRealRowIndex+'> ';
-	            _html += $m._detailViewMakeTd(aTd);
+	            _html += this._detailViewMakeTd(aTd);
 	            _html +='           </tr> ';
 	        }
 	        
-	        grd.find('#gridDetail2').html('');
-	        grd.find('#gridDetail3').html('');
-	        grd.find('#gridDetail1').html(_html);
-	        _thisObj.closest("div[type="+_type+"]").find(".gridDetail_body").css('display','block'); 
+	        grd.querySelector('#gridDetail2').innerHTML = '';
+	        grd.querySelector('#gridDetail3').innerHTML = ''
+	        grd.querySelector('#gridDetail1').innerHTML = _html;
+	        _thisObj.closest("div[type="+_type+"]").querySelector(".gridDetail_body").style.display = 'block'; 
 	    }else{
-	        $m.alert("상세보기할 행을 선택하세요!");
+	        com.alert("상세보기할 행을 선택하세요!");
 	    }
 
 	},
 	_detailView2 (_thisObj) {
 	    var _type = $m.getType(_thisObj); 
 	    var grd = $m.getTypeObj(_thisObj);
-	    $m._detailViewContentCopy(_thisObj);
+	    this._detailViewContentCopy(_thisObj);
 	    grd.getAttribute('selectedDetailView',2);
 	    
 	    var selectedRealRowIndex = grd.getAttribute("selectedRealRowIndex");
@@ -1941,7 +1951,7 @@ const gridProto = {
 	_detailView3 (_thisObj) {
 	    var _type = $m.getType(_thisObj); 
 	    var grd = $m.getTypeObj(_thisObj);
-	    $m._detailViewContentCopy(_thisObj);
+	    this._detailViewContentCopy(_thisObj);
 	    grd.getAttribute('selectedDetailView',3);
 	    var selectedRealRowIndex = grd.getAttribute("selectedRealRowIndex");
 	    var foundedRow = grd.find('tbody:first>tr[realrowindex='+selectedRealRowIndex+']');
@@ -1981,6 +1991,85 @@ const gridProto = {
 	    grd.find('#gridDetail3').html(_html);
 	    _thisObj.closest("div[type="+_type+"]").find(".gridDetail_body").css('display','block');     
 	    
+	},
+	
+	_detailViewContentCopy (_thisObj) {
+		var _gridDetailNum = 'gridDetail1';
+
+		// 1) 버튼 on 클래스 초기화
+		document.querySelector('.button.colTh1').classList.remove('on');
+		document.querySelector('.button.colTh2').classList.remove('on');
+		document.querySelector('.button.colTh3').classList.remove('on');
+
+		// 2) 클릭된 버튼에 따라 on 클래스 추가
+		if (_thisObj.classList.contains('colTh1')) {
+			document.querySelector('.button.colTh1').classList.add('on');
+		} else if (_thisObj.classList.contains('colTh2')) {
+			document.querySelector('.button.colTh2').classList.add('on');
+		} else if (_thisObj.classList.contains('colTh3')) {
+			document.querySelector('.button.colTh3').classList.add('on');
+		}
+
+		// 3) 타입/그리드 객체
+		var _type = com.getType(_thisObj);
+		var _grid = com.getTypeObj(_thisObj); // DOM element라고 가정
+
+		// jQuery: _grid.attr('selectedDetailView')
+		var selectedDetailView = _grid ? _grid.getAttribute('selectedDetailView') : null;
+
+		if (selectedDetailView != null) {
+		  _gridDetailNum = 'gridDetail' + selectedDetailView;
+
+		  var dbody = _grid.querySelector('.gridDetail_body');
+		  if (!dbody) return;
+
+		  // jQuery: dbody.find('#'+_gridDetailNum).find('td')
+		  var detailTable = dbody.querySelector('#' + _gridDetailNum); 
+		  var tds = detailTable ? detailTable.querySelectorAll('td') : [];
+
+		  for (var i = 0; i < tds.length; i++) {
+		    var aTd = tds[i];
+
+		    // jQuery: $(aTd).closest("tr")
+		    var aTr = aTd.closest('tr');
+
+		    // jQuery: $(aTd).find('div[contenteditable=true]')
+		    var aDiv = aTd.querySelector('div[contenteditable="true"]');
+
+		    if (aDiv) {
+		      // jQuery: aDiv.html()
+		      var cont = aDiv.innerHTML;
+		      cont = cont
+		        .replace(/<\/div>/g, '')
+		        .replace(/<div>|<br>/g, '\n');
+
+		      // jQuery: aTr.attr('realrowindex')
+		      var realRowIndex = aTr ? aTr.getAttribute('realrowindex') : null;
+
+		      // jQuery: $(aTd).prev().find('label').attr("id")
+		      var prevTd = aTd.previousElementSibling;
+		      var label = prevTd ? prevTd.querySelector('label') : null;
+		      var colid = label ? label.getAttribute('id') : null;
+
+		      var grd = _grid; // DOM
+
+		      if (grd && realRowIndex != null && colid != null) {
+		        this.setCellData(grd, realRowIndex, colid, cont);
+		      }
+		    }
+		  }
+		} else {
+		  console.log('selectedDetailView', selectedDetailView);
+		}
+
+	},
+	
+	_detailViewClose (_thisObj) {
+	    this._detailViewContentCopy(_thisObj);
+	    var _type = com.getType(_thisObj)
+	    var _grid = com.getTypeObj(_thisObj)
+	    var dbody = _grid.querySelector(".gridDetail_body");
+	    dbody.style.display ='none';
 	},
 	
 	openSelect (_thisObj){
@@ -2135,7 +2224,7 @@ const gridProto = {
 	            var _displayFunctionApply = td ? td.getAttribute('displayFunctionApply') : null;
 	            var _editormode = td ? td.getAttribute('editormode') : null;
 
-	            if (_editormode === 'true' || $m.getDevice() === 'mobile') {
+	            if (_editormode === 'true' || com.getDevice() === 'mobile') {
 	              divInput.innerHTML = _data;
 	            } else if (_displayFunctionApply === 'realtime' && _iptTag) {
 	              _iptTag.value = _data;
@@ -2265,7 +2354,7 @@ const gridProto = {
 	    	list = grd.excelList;
 	    }
 	    if(list.length == 0){
-	    	 $m.alert("다운로드할 데이터가 없습니다.");
+	    	 com.alert("다운로드할 데이터가 없습니다.");
 	    	 return;
 	    }
 	    var _parammap = {};
@@ -2499,7 +2588,7 @@ const gridProto = {
 	  var displayfunctionValue = (_thisObj instanceof Element) ? _thisObj.getAttribute("displayfunction") : null;
 	  var displayFunctionApplyValue = (_thisObj instanceof Element) ? _thisObj.getAttribute("displayFunctionApply") : null;
 
-	  if ($m.trim(displayfunctionValue) !== '' && $m.trim(displayFunctionApplyValue) === 'realtime') {
+	  if (displayfunctionValue.trim() !== '' && displayFunctionApplyValue.trim() === 'realtime') {
 	    var reValue = eval(displayfunctionValue)(_thisObj.value);
 	    this.setCellData(grd, realRowIndex, colid, reValue);
 	  } else {
@@ -2545,23 +2634,22 @@ const gridProto = {
 
 	    var cellTd = _thisObj;
 	    var _keyMaskStr = '';
-	    var _editorMode = $m.trim(cellTd.getAttribute('editormode'));
-	    var _keyMask = $m.trim(cellTd.getAttribute('keyMask'));
-	    var _displayfunction = $m.trim(cellTd.getAttribute('displayfunction'));
-	    var _displayfunctionapply = $m.trim(cellTd.getAttribute('displayfunctionapply'));
+	    var _editorMode = cellTd.getAttribute('editormode')?.trim()||"";
+	    var _keyMask = cellTd.getAttribute('keyMask')?.trim()||"";
+	    var _displayfunction = cellTd.getAttribute('displayfunction')?.trim()||"";
+	    var _displayfunctionapply = cellTd.getAttribute('displayfunctionapply')?.trim()||"";
 
 	    if (_keyMask != null) _keyMaskStr = _keyMask;
 
-	    // th명 구하기: $($(_grd).find('thead th')[_thisObj.cellIndex]).text()
 	    var _thNm = '';
 	    if (_grd) {
 	      var ths = _grd.querySelectorAll('thead th');
 	      if (ths && ths[_thisObj.cellIndex]) _thNm = (ths[_thisObj.cellIndex].textContent || '');
 	    }
 
-	    if (com.getDevice() === 'mobile') {
+	    if (com.getDevice() == 'mobile') {
 	      if (String(_editorMode || '').trim() !== '') {
-	        $m.popup({
+	        com.popup({
 	          type: "POPUP",
 	          modal: "true",
 	          url: '/moca/comp/COMP_EDIT.html',
@@ -2595,16 +2683,7 @@ const gridProto = {
 	          }
 	        });
 	      } else {
-	        // $(_divObj).html(...) 대체
-	        if (_divObj) {
-	          _divObj.innerHTML =
-	            "<input type='text' " +
-	            "onkeyup=\"$m._uptData(this)\" " +
-	            "displayFunction='" + (_displayfunction || "") + "' " +
-	            "displayFunctionApply='" + (_displayfunctionapply || "") + "' " +
-	            "onblur=\"'+_id+'.setDivTag(this,this.value,'" + (_keyMaskStr || "") + "');\" " +
-	            "value='" + (_value || "") + "'/>";
-	        }
+				_divObj.innerHTML = "<input type='text' onkeyup=\""+_grd.id+"._uptData(this)\" displayFunction=\'"+_displayfunction+"\'  displayFunctionApply=\'"+_displayfunctionapply+"\' onblur=\""+_grd.id+".setDivTag(this,this.value,\'"+_keyMaskStr+"\');\"  value='"+_value+"'/>";
 	      }
 	    }
 	  }
@@ -2613,13 +2692,11 @@ const gridProto = {
 	  var grd = _thisObj ? _thisObj.closest('div[type="grid"]') : null;
 	  if (!grd) return;
 
-	  $m.nowGrd = grd;
-
-	  var selectedRealRowIndex = $m.nowGrd.getAttribute("selectedRealRowIndex");
+	  var selectedRealRowIndex = this.getAttribute("selectedRealRowIndex");
 
 	  var _thisTd = _thisObj.closest('td');
 	  var colId = _thisTd ? _thisTd.id : null;
-	  $m.nowColId = colId;
+	  this.nowColId = colId;
 
 	  var _tbody = _thisObj.closest('tbody');
 	  var _thisTr = _thisObj.closest('tr');
@@ -2644,7 +2721,7 @@ const gridProto = {
 	  }
 
 	  pro = pro.then(function () {
-	    return $m._uptData(_thisObj);
+	    return grd._uptData(_thisObj);
 	  });
 
 	  if (onAfterClickStr != "" && onAfterClickStr != null) {
@@ -2699,7 +2776,7 @@ const gridProto = {
 	},
 	  
 	setDivTag (__comp,__value,_keyMask){
-	  	this.setValue(__comp,__value,_keyMask);
+	  	com.setValue(__comp,__value,_keyMask);
 		if (__comp && __comp.parentElement) {
 		  __comp.parentElement.innerHTML = __value;
 		}
@@ -2935,8 +3012,8 @@ const gridProto = {
 		  grd.appliedFilterMap[_headerId] != null &&
 		  (grd.appliedFilterMap[_headerId].idx < grd.appliedFilterArr.length)
 		) {
-		  $m.filterRemoveAll(grd);
-		  // $m.drawGrid(grd.id, grd.ori_list);
+		  this.filterRemoveAll(grd);
+		  this.drawGrid(grd.id, grd.ori_list);
 		}
 
 		// myIdx
@@ -3108,7 +3185,6 @@ const gridProto = {
 	
 	gridCell_selectChange (_thisObj){
 	    ['grid cell selectbox change!'];
-		debugger;
 	    var colid = _thisObj.closest('td').id;
 	    var _tbody = _thisObj.closest('tbody');
 	    var grd = _thisObj.closest('div[type="grid"');
@@ -3135,6 +3211,80 @@ const gridProto = {
 	        eval(_onSelectChanged)(realRowIndex,colid,beforeCd,beforeNm,_thisObj.value,label);
 	    }
 	},
+	
+	_row_add (_thisObj){
+	    ['행추가'] 
+	    var grd = com.getTypeObj(_thisObj);
+	    var grdkey = _thisObj.getAttribute("grdkey");
+	    var aRow = {"_system":{"status":""}};
+	    var ks = Object.keys(grd.cellInfo);
+	    for(var i=0,j=ks.length;i < j; i++){
+	        var key = ks[i];
+	        if(key == 'status'){
+	            aRow["_system"][key] = 'C';
+	        }else{
+	            aRow[key] = '';
+	        }
+	    }
+	    if(grd.list == null){
+	        grd.list = [];
+	    }
+	    grd.list.unshift(aRow); 
+	    grd.drawGrid(grd,grd.list);
+	    var rowForFocus = grd.querySelector('tbody')?.children[0];
+	    if(rowForFocus != null){
+	        this._setSelectRowIndex(rowForFocus);
+	        this._setRowSelection(grd);
+	    }
+	},
+	
+	_row_del (_thisObj){
+	    ['행삭제']
+	    var _type = com.getType(_thisObj); 
+	    var g = com.getTypeObj(_thisObj);
+	    var toolbar_delrow_imd = g.getAttribute("toolbar_delrow_imd");
+	    var selectedRealRowIndex = g.getAttribute("selectedRealRowIndex");
+	    var status = g.list[selectedRealRowIndex]["_system"]['status'];
+	    if(status == 'C' || toolbar_delrow_imd == 'true'){
+	        this.removeRow(g,selectedRealRowIndex); 
+	    }else if(status == 'D'){    
+	        this.setCellData(g,selectedRealRowIndex,'status','');       
+	    }else{
+	        this.setCellData(g,selectedRealRowIndex,'status','D');
+	    }
+	},
+	
+	removeRow (_grd,_rowIndex){
+	    ['grid removeRow']
+	    _grd.list.splice(_rowIndex,1);
+	    if(_grd.list.length > 0){
+	        _grd.setAttribute("selectedRealRowIndex","0");
+	    }else{
+	        _grd.setAttribute("selectedRealRowIndex","");
+	    }
+	    //새로그려야함. 데이터 정합성을 위해
+	    this.grid_redraw(_grd);
+	},
+	
+	removeCol (tdArr) {
+	    for(var i=(tdArr.length-1);i > -1; i--){
+	        var aTd = tdArr[i];
+	        var name = aTd.getAttribute("name");
+	        if(name == '선택' || name == '상태'){
+	            tdArr.splice(i, 1);
+	        }
+	    }
+	},
+	
+	grid_redraw (_grd){
+	    ['grid_redraw']
+	    this.sFunction(_grd.querySelector('.moca_scrollY_type1'));
+	},
+	
+	_detailview (_thisObj) {
+	    this._detailView1(_thisObj);
+		document.querySelectorAll('.button.colTh1').forEach(el => el.classList.add('on'));
+	}
 
 }
 

@@ -1,5 +1,6 @@
 
 const com = {
+	callbacks : {},
 	cloneDiv(frame) {
 		var div = document.createElement("div");
 		div.style.display = "block";
@@ -626,7 +627,6 @@ const com = {
                     } 
                     g_obj[cellId]['list'] = l;
                     g_obj[cellId]['codeOpt'] = v;
-					debugger;
                     g_obj[cellId]['map'] = this.listToMap(l,v);
                 }
             }else{
@@ -734,5 +734,102 @@ const com = {
 
 	    return re;
 	},
+	
+	alert (_message,_callback){
+	    ['alert messagebox'];   
+	    var messageboxId = "MESSAGE_"+this.now()+this.shuffleRandom(6);
+	    this.callbacks[messageboxId] = _callback;
+	    var alert_html = '';
+	    //alert_html += '<div class="moca_messagebox_modal" style="display:block" id='+messageboxId+'>';
+	    alert_html += '<div class="moca_messagebox alert">';
+	    alert_html += '<div class="moca_messagebox_grp">';
+	    alert_html += '<div class="ico"></div>';
+	    alert_html += '<h2 class="moca_messagebox_title"></h2>';
+	    alert_html += '<div class="moca_message">';
+	    alert_html += '<p>'+_message+'</p>';
+	    alert_html += '</div>';
+	    alert_html += '<div class="moca_btnbox">';
+	    alert_html += '<button type="button" class="moca_btn_confirm" onclick="com.alertok(\''+messageboxId+'\');">확인</button>';
+	    alert_html += '</div>';
+	    alert_html += '</div>';
+	    alert_html += '</div>';
+	    //alert_html += '</div>';
+	    
+	    
+	    var tmp = document.createElement( 'div' );
+	    tmp.setAttribute("id",messageboxId);
+	    tmp.setAttribute("class","moca_messagebox_modal");
+	    tmp.innerHTML = alert_html;
+	    document.body.appendChild(tmp);
+	    //document.body.innerHTML += alert_html;
+	},
+
+	alertok (_messageboxId,_tdId,_textAreaObj,_grd) {
+	    ['현재 alert창을 닫음'];
+		if(_tdId && _tdId.trim() !=''){
+			var _srcId = _grd.getAttribute('srcid');
+		    var _realRow = _grd.getAttribute("selectedRealRowIndex");
+		    var _returnValue = $(_textAreaObj).html();
+			_grd.setCellData(_grd,_realRow,_tdId,_returnValue);
+		}
+		
+		
+	   document.getElementById(_messageboxId).remove();
+	    if(this.callbacks[_messageboxId]){
+	        this.callbacks[_messageboxId](_returnValue);
+	        delete this.callbacks[_messageboxId];
+	    }
+	},
+	
+	now (_d) {
+	    ['현재시간을 밀리세컨드까지 숫자로만 붙여서가져옴'];
+	    var d;
+	    if(_d == null){
+	        d = new Date();
+	    }else{
+	        d = _d;
+	    }
+	    var nowtime = d.getFullYear();
+	    nowtime += this.toTwoChar(d.getMonth()+1);
+	    nowtime += this.toTwoChar(d.getDate());
+	    nowtime += this.toTwoChar(d.getHours());
+	    nowtime += this.toTwoChar(d.getMinutes());
+	    nowtime += this.toTwoChar(d.getSeconds());
+	    nowtime += d.getMilliseconds();
+	    nowtime += d.getDay();
+	    return nowtime;
+	},
+	
+	toTwoChar (value) {
+	    ['1자리숫자를 앞에 0을 붙여 2자리 숫자로 만듬'];
+	    var tmp = value+'';
+	    if(tmp.length == 1){
+	        tmp = '0'+tmp;
+	    }
+	    return tmp;
+	},
+
+	shuffleRandom (n) {
+	    ['난수생성'];
+	    var ar = new Array();
+	    var temp;
+	    var rnum;
+	   
+	    //전달받은 매개변수 n만큼 배열 생성 ( 1~n )
+	    for(var i=1; i<=n; i++){
+	        ar.push(i);
+	    }
+
+	    //값을 서로 섞기
+	    for(var i=0; i< ar.length ; i++)
+	    {
+	        rnum = Math.floor(Math.random() *n); //난수발생
+	        temp = ar[i];
+	        ar[i] = this.toTwoChar(ar[rnum]);
+	        ar[rnum] = this.toTwoChar(temp);
+	    }
+	    return JSON.stringify(ar).replace(/\,|\"|\[|\]/g,'');
+	},
+
 
 };

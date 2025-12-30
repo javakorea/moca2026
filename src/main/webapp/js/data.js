@@ -173,3 +173,36 @@ data.list2 =
         "lastUpdusrId": ""
     }
 ];
+
+data.list3 = [
+  {
+	"_system": {
+	            "status": "",
+	            "expand": "true"
+	        },
+    "TEST_YN": "0",
+    "TEST_PROP": "모카 시연용 데이터",
+    "TEST_TYPE": "TEST2",
+    "TEST_DB": "모카 시연용 데이터",
+    "TEST_VALUE": "모카 시연용 데이터입니다.",
+    "IDX": 64,
+    "TEST_DT": 1639444141000,
+    "TEST_NM": "TEST_DATA",
+    "TEST_YN2": "1"
+  },
+  {
+	"_system": {
+	            "status": "",
+	            "expand": "true"
+	        },
+    "TEST_YN": "1",
+    "TEST_PROP": "모카 시연용 데이터",
+    "TEST_TYPE": "TEST2",
+    "TEST_DB": "모카 시연용 데이터",
+    "TEST_VALUE": "모카 시연용 데이터입니다.",
+    "IDX": 65,
+    "TEST_DT": 1639444141000,
+    "TEST_NM": "TEST_DATA",
+    "TEST_YN2": "1"
+  }
+];
