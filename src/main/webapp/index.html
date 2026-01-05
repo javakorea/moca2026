@@ -33,7 +33,12 @@ async function onMocaLoad() {
 	  		com.executeScripts(scripts);
 	  		// 3. 이제 script 안 함수 사용 가능
 	  		if (window.onpageload) {
-	  		  window.onpageload();
+	  			let divObjs = div.querySelectorAll('div[type="grid');
+	  			for(let i=0; i<divObjs.length; i++){
+	  				new Grid(divObjs[i]);
+	  			}
+		  		window.onpageload();
+	  		  
 	  		}
         })(frames[i]);
     }

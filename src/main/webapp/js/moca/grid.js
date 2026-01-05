@@ -463,7 +463,7 @@ const gridProto = {
 		    var sortable = aTh.getAttribute("sortable");
 		    if (sortable == "true") {
 		      // 기존 inline onclick 유지(완전 순수 JS로 바꾸려면 아래 주석 참고)
-		      _after += '<button class="moca_grid_sort_btn sort_none" onclick="$m.doSort(this)">정렬취소</button>';
+		      _after += '<button class="moca_grid_sort_btn sort_none" onclick="'+_id+'.doSort(this)">정렬취소</button>';
 		    }
 
 		    var filterable = aTh.getAttribute("filterable");
@@ -1895,7 +1895,7 @@ const gridProto = {
 	    var selectedRealRowIndex = grd.getAttribute("selectedRealRowIndex");
 	    if(selectedRealRowIndex != null){
 	        var foundedRow = grd.querySelector('tbody > tr[realrowindex="' + selectedRealRowIndex + '"]');
-	        var tdArr = foundedRow.querySelector('td');
+	        var tdArr = foundedRow.querySelectorAll('td');
 	        this.removeCol(tdArr);
 	        var _html = '';
 	        for(var i=0;i < tdArr.length; i++){
@@ -1908,6 +1908,7 @@ const gridProto = {
 	        grd.querySelector('#gridDetail2').innerHTML = '';
 	        grd.querySelector('#gridDetail3').innerHTML = ''
 	        grd.querySelector('#gridDetail1').innerHTML = _html;
+			debugger;
 	        _thisObj.closest("div[type="+_type+"]").querySelector(".gridDetail_body").style.display = 'block'; 
 	    }else{
 	        com.alert("상세보기할 행을 선택하세요!");
@@ -1915,26 +1916,26 @@ const gridProto = {
 
 	},
 	_detailView2 (_thisObj) {
-	    var _type = $m.getType(_thisObj); 
-	    var grd = $m.getTypeObj(_thisObj);
+	    var _type = com.getType(_thisObj); 
+	    var grd = com.getTypeObj(_thisObj);
 	    this._detailViewContentCopy(_thisObj);
 	    grd.getAttribute('selectedDetailView',2);
 	    
 	    var selectedRealRowIndex = grd.getAttribute("selectedRealRowIndex");
 	    var foundedRow = grd.find('tbody:first>tr[realrowindex='+selectedRealRowIndex+']');
 	    var tdArr = foundedRow.find('td');
-	    $m.removeCol(tdArr);
+	    this.removeCol(tdArr);
 	    var _html = '';
 	    
 	    for(var i=0;i < tdArr.length;){
 	        _html +='           <tr realrowindex='+selectedRealRowIndex+'> ';
 	        
 	        var aTd = tdArr[i];
-	        _html += $m._detailViewMakeTd(aTd);
+	        _html += this._detailViewMakeTd(aTd);
 	        if(i+1 < tdArr.length){
 	            var aTd = tdArr[i+1];
 
-	            _html += $m._detailViewMakeTd(aTd);
+	            _html += this._detailViewMakeTd(aTd);
 	        }else{
 	            _html +='               <th><label></label></th> ';
 	            _html +='               <td></td> ';
@@ -1949,24 +1950,24 @@ const gridProto = {
 	},
 	
 	_detailView3 (_thisObj) {
-	    var _type = $m.getType(_thisObj); 
-	    var grd = $m.getTypeObj(_thisObj);
+	    var _type = com.getType(_thisObj); 
+	    var grd = com.getTypeObj(_thisObj);
 	    this._detailViewContentCopy(_thisObj);
 	    grd.getAttribute('selectedDetailView',3);
 	    var selectedRealRowIndex = grd.getAttribute("selectedRealRowIndex");
 	    var foundedRow = grd.find('tbody:first>tr[realrowindex='+selectedRealRowIndex+']');
 	    var tdArr = foundedRow.find('td');
-	    $m.removeCol(tdArr);
+	    this.removeCol(tdArr);
 	    var _html = '';
 	    for(var i=0;i < tdArr.length;){
 	        _html +='           <tr realrowindex='+selectedRealRowIndex+'> ';
 	        
 	        var aTd = tdArr[i];
-	        _html += $m._detailViewMakeTd(aTd);
+	        _html += this._detailViewMakeTd(aTd);
 	        i = i+1;
 	        if(i < tdArr.length){
 	            var aTd = tdArr[i];
-	            _html += $m._detailViewMakeTd(aTd);
+	            _html += this._detailViewMakeTd(aTd);
 	        }else{
 	            _html +='               <th><label></label></th> ';
 	            _html +='               <td></td> ';
@@ -1977,7 +1978,7 @@ const gridProto = {
 	        i = i+1;
 	        if(i < tdArr.length){
 	                var aTd = tdArr[i];
-	                _html += $m._detailViewMakeTd(aTd);
+	                _html += this._detailViewMakeTd(aTd);
 	        }else{
 	            _html +='               <th><label></label></th> ';
 	            _html +='               <td></td> ';
@@ -1991,6 +1992,24 @@ const gridProto = {
 	    grd.find('#gridDetail3').html(_html);
 	    _thisObj.closest("div[type="+_type+"]").find(".gridDetail_body").css('display','block');     
 	    
+	},
+	
+	_detailViewMakeTd (aTd) {
+	    var _html = '';
+	    var isContentEditable = false;
+	    var contents = '';
+		let ipt = aTd.querySelector('input');
+
+		if (ipt) {
+		  isContentEditable = true;
+		  contents = ipt.value.replace(/\r?\n/g, '<br>');
+		} else {
+		  contents = aTd.innerHTML.replace(/\r?\n/g, '<br>');
+		}
+
+	    _html +='               <th><label id='+aTd.getAttribute("id")+'>'+aTd.getAttribute("name")+'</label></th> ';
+	    _html +='               <td><div contenteditable="'+isContentEditable+'" placeholder="">'+contents+'</div></td> ';
+	    return _html;
 	},
 	
 	_detailViewContentCopy (_thisObj) {
@@ -2387,7 +2406,7 @@ const gridProto = {
 	                        v = "";
 	                    }else{
 	                        if(v.length == 13 && $.isNumeric(v) && hkey != "FILE_ID"){
-	                            v = $m.longToDate(v);
+	                            v = com.longToDate(v);
 	                        }else if(hkey == "FILE_ID"){
 	                            v = ""+v+"_";
 	                        }
@@ -2607,12 +2626,12 @@ const gridProto = {
 	  }
 	  if (!trObj) return;
 
-	  var realRowInfo = $m.getRealRowInfo(trObj);
+	  var realRowInfo = this.getRealRowInfo(trObj);
 	  var _realIndex = realRowInfo.realRowIndex;
 	  var _grd = realRowInfo.grd;
 
-	  $m.grid_expand_loop(_grd, _realIndex, null, 1);
-	  $m.grid_redraw(_grd);
+	  this.grid_expand_loop(_grd, _realIndex, null, 1);
+	  this.grid_redraw(_grd);
 	},
 	
 	defaultCellClick (_thisObj) {
@@ -2868,12 +2887,12 @@ const gridProto = {
 	        _all += '</span>';
 	        _all += '<div class="fr">';
 	        if(grd[o.getAttribute("filterableId")].filterType != 'countableMap'){
-	            _all += '<button type="button" class="moca_ibn_btn mr3" onclick="$m.filterSort(this,\''+_id+'\',\''+o.getAttribute("filterableId")+'\')" style="">건수순</button>';
+	            _all += '<button type="button" class="moca_ibn_btn mr3" onclick="'+_id+'.filterSort(this,\''+_id+'\',\''+o.getAttribute("filterableId")+'\')" style="">건수순</button>';
 	        }else{
-	            _all += '<button type="button" class="moca_ibn_btn mr3" onclick="$m.filterAlpha(this,\''+_id+'\',\''+o.getAttribute("filterableId")+'\')" style="">가나다순</button>';
+	            _all += '<button type="button" class="moca_ibn_btn mr3" onclick="'+_id+'.filterAlpha(this,\''+_id+'\',\''+o.getAttribute("filterableId")+'\')" style="">가나다순</button>';
 	        }
-	        _all += '<button type="button" class="moca_ibn_btn mr3" onclick="$m.filterApply(this,\''+_id+'\',\''+o.getAttribute("filterableId")+'\')" style="">적용</button>'; 
-	        _all += '<button type="button" class="moca_ibn_btn mr3 bd0" onclick="$m.expand(this,\''+_id+'\',\''+o.getAttribute("filterableId")+'\')" style=""><i class="fas fa-angle-double-down"></i></button>';
+	        _all += '<button type="button" class="moca_ibn_btn mr3" onclick="'+_id+'.filterApply(this,\''+_id+'\',\''+o.getAttribute("filterableId")+'\')" style="">적용</button>'; 
+	        _all += '<button type="button" class="moca_ibn_btn mr3 bd0" onclick="'+_id+'.expand(this,\''+_id+'\',\''+o.getAttribute("filterableId")+'\')" style=""><i class="fas fa-angle-double-down"></i></button>';
 	        _all += '</div>';
 	        _all += '<input type="text" class="moca_input req" style="" value="" onkeyup="$m.realtimeSearch(this)" placeholder="검색어를 입력하세요">';
 	        _all += '</div>';
@@ -3027,7 +3046,7 @@ const gridProto = {
 		  this.doFilterForSingle(_thisObj, event, grd);
 		} else {
 		  if (myIdx != null) {
-		    $m.doFilterForSingle(_thisObj, event, grd);
+		    this.doFilterForSingle(_thisObj, event, grd);
 		  } else {
 		    $m.question(
 		      '멀티필터로 적용하시겠습니까?',
@@ -3271,7 +3290,8 @@ const gridProto = {
 	        var aTd = tdArr[i];
 	        var name = aTd.getAttribute("name");
 	        if(name == '선택' || name == '상태'){
-	            tdArr.splice(i, 1);
+				let _arr = [...tdArr];
+	            _arr.splice(i, 1);
 	        }
 	    }
 	},
@@ -3283,8 +3303,87 @@ const gridProto = {
 	
 	_detailview (_thisObj) {
 	    this._detailView1(_thisObj);
-		document.querySelectorAll('.button.colTh1').forEach(el => el.classList.add('on'));
-	}
+		document.querySelector('.button.colTh1').classList.add('on');
+	},
+	
+	doSort (thisObj) {
+	    var p;
+	    var o;
+	    var h;
+	    if(thisObj != null && thisObj.type != 'dblclick'){
+	        p = thisObj;
+	        o = $(thisObj);
+	        h = $(thisObj).closest('th')[0];
+	    }else{
+	        p = this;
+	        o = p.querySelector('.moca_grid_sort_btn');
+	        h = p;
+	    }
+	    var grdo = com.getTypeObj(p)[0];
+	    com.stopEvent(event);
+	    var _divObj = grdo;
+	    
+	    var colArray = _divObj.querySelector('colgroup:first col');
+	    
+	    var thArray = _divObj.querySelector('thead th[id]');
+	    var _thMap = {};
+	    for(var i=0; i < thArray.length; i++){
+	        var thObj = thArray[i];
+	        _thMap[thObj.id] = thObj;
+	    }
+	    var _idx = 0;
+	    for(var i=0; i < colArray.length; i++){
+	        var aCol = colArray[i];
+	        var aTh = _thMap[aCol.getAttribute("thid")];
+	        if(aTh == null){
+	            aTh = thArray[i];
+	        }
+	        var _id = aTh.id;
+	        if(_id == h.id){
+	            _idx = i;
+	            break;
+	        }
+	    }
+	    
+	    var ks = Object.keys(_divObj.cellInfo);
+	    var colid = ks[_idx];
+	    
+	    
+	    var dataArray = grdo.list;
+	    
+	    var returnArray;
+	    if(o.hasClass('sort_none')){
+	        //원본에서 sort시작시점! 서 원본상태를 clone을 떠둠!
+	        //grdo.sort_ori_list = dataArray.clone();
+	        grdo.sort_ori_list = dataArray;
+	    }
+
+	    if(o.hasClass('sort_none')){
+	        //오름차순 다 나 가
+	        returnArray = $m.arrayOrderFnc(dataArray,[colid], ["asc"]);
+	        grdo.list = returnArray;
+	        
+	        $m.drawGrid_inside(grdo, returnArray);
+	        o.removeClass("sort_none");
+	        o.addClass("sort_asc");                 
+	    }else if(o.hasClass('sort_asc')){
+	        //내림차순 가 나 다
+	        returnArray = $m.arrayOrderFnc(dataArray,[colid], ["desc"]);
+	        grdo.list = returnArray;
+	        $m.drawGrid_inside(grdo, returnArray);
+	        o.removeClass("sort_asc");
+	        o.addClass("sort_desc");
+	    }else if(o.hasClass('sort_desc')){
+	        //원래대로
+	        returnArray = grdo.sort_ori_list;
+	        grdo.list = returnArray;
+	        $m.drawGrid_inside(grdo, returnArray);    
+	        o.removeClass("sort_desc");
+	        o.addClass("sort_none");                    
+	    }
+	    $m.redrawGrid(grdo);//스크롤포시션 유지되면서 sort됨
+	    return false;       
+	},
 
 }
 

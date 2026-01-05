@@ -6,14 +6,13 @@
 </head>
 <script>
 function onpageload(){
-	let grd_1 = new Grid(grd_13); 
-	let grd_2 = new Grid(grd_comp); 
-	
 	com.code({
 		"grd_13.EFC_COMBO":{code:'age',allOption:{label:"-선택-",value:""}},
+		"grd_comp.EFC_COMBO":{code:'age',allOption:{label:"-선택-",value:""}},
+		
 	},function(){
-		grd_1.draw(data.list1);
-		grd_2.draw(data.list3);
+		grd_13.draw(data.list1);
+		grd_comp.draw(data.list3);
 	});
 };
 
@@ -66,15 +65,15 @@ function grd_comp__onDblClick(e){
 			<tbody>
 				<tr>
 					<td id="status" celltype="input" style="" readOnly="true" name="상태"></td>
-					<td id="TEST_YN" celltype="checkbox" style="" trueValue="1" falseValue="0" name="선택" disabledFunction="" ></td>
-					<td id="TEST_YN2" celltype="radio" style="" name="선택" 
+					<td id="TEST_YN" celltype="checkbox" style="" trueValue="1" falseValue="0" name="checkbox" disabledFunction="" ></td>
+					<td id="TEST_YN2" celltype="radio" style="" name="radio" 
 						  itemset='[{"label":"yes","value":"1","checked":"true"},
 						              {"label":"no","value":"0"}
 						              ]'
 					
 					></td>
-					<td id="EFC_COMBO" celltype="select" style="text-align:center" required="true" name="공통콤보" readOnly="false"></td>
-					<td id="TEST_DB" celltype="input" style="" name="값" readOnly="false"></td>
+					<td id="EFC_COMBO" celltype="select" style="text-align:center" required="true" name="combo" readOnly="false"></td>
+					<td id="TEST_DB" celltype="input" style="" name="input" readOnly="false"></td>
 					<td id="TEST_VALUE" celltype="input" style="text-align:left"  name="설명 (editorMode='true')"  required="false" editorMode="true" ></td>
 					
 				</tr>
