@@ -10,6 +10,7 @@ const gridProto = {
 	    ['renderGrid'];
 		let _divObj = this;
 	    var _id = _divObj.id;
+		debugger;
 	    var pageid = _divObj.getAttribute("pageid");
 	    var srcid = _divObj.getAttribute("srcid");
 	    com.getObj(_id,null,pageid,srcid);//id중복체크
@@ -2417,7 +2418,7 @@ const gridProto = {
 	                str += line + '\r\n';
 	    }
 	    var ReportTitle= grd.getAttribute('label');
-	    var fileName = grd.closest('.moca_tab_panel')?.find('#sreenNm').text()+"_"||"";
+	    var fileName = grd.closest('div[type="frame"]').getAttribute('src').replace(/.*\/|\.html/g, '')+"_";
 	    fileName += ReportTitle.replace(/ /g,"_");   
 	    fileName = fileName + ".csv";
 

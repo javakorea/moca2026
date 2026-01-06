@@ -13,6 +13,7 @@ function onpageload(){
 	},function(){
 		grd_13.draw(data.list1);
 		grd_comp.draw(data.list3);
+		grd_1.draw(data.list4);
 	});
 };
 
@@ -42,7 +43,7 @@ function grd_comp__onDblClick(e){
 		onDblClick = "grd_comp__onDblClick"
 		label ="시연 GridCellType"
        >
-              <table style="width: 100%">
+            <table style="width: 100%">
 			<colgroup>
 				<col style="width:30px" mobileHide="true" hide="true" columnKey="status" thKey="H_status" >
 				<col style="width:60px" mobileHide="false" hide="false" columnKey="TEST_YN" thKey="H_TEST_YN" >
@@ -92,7 +93,7 @@ function grd_comp__onDblClick(e){
 			toolbar_delrow="false"
 			toolbar_nextbtn="false"
 			toolbar_full="true"
-			style = "height:100%"
+			style = "height:30%"
 			label="시연_Grid excel">
 			<table style="width: 100%">
 				<colgroup>
@@ -130,13 +131,54 @@ function grd_comp__onDblClick(e){
 						<td excelIndex="4"  id="FinacManager" name="이름"  celltype="input" style="" readonly="true" displayFunction=""></td>
 						<td excelIndex="5"  id="FinacAddress" name="주소"  celltype="input" style="text-align:left" readonly="true" displayFunction=""></td>
 						<td excelIndex="6"  id="CorpPhone" name="전화번호"  celltype="input" style="" readonly="true" displayFunction=""></td>
-						<td excelIndex="7" id="EFC_COMBO" celltype="select" style="text-align:center" required="false" name="공통콤보" readOnly="false"></td>
+						<td excelIndex="7"  id="EFC_COMBO" celltype="select" style="text-align:center" required="false" name="공통콤보" readOnly="false"></td>
 						<td excelIndex="8"  id="Note" name="비고"  celltype="input" style="" readonly="true" displayFunction=""></td>
 						
 					</tr>
 				</tbody>
 			</table>				
 	</moca-grid>
-
+	<moca-grid type="grid" class="moca_grid toolbar fauto mt12" default_cell_height="26px" id="grd_1" rowSelectedColor="#434e5f"
+							toolbar_common_btns_pc='{"detail":"false","exup":"false","exdn":"true","addrow":"false","delrow":"false","full":"true"}'
+							toolbar_common_btns_mobile='{"detail":"false","exup":"false","exdn":"false","addrow":"false","delrow":"false","full":"true"}'
+							rendering_div = "true"
+							toolbar_search_size="false"
+							toolbar_detail="false"
+							toolbar_exup="true"
+							toolbar_exdn="true"
+							toolbar_addrow="true"
+							toolbar_delrow="true"
+							toolbar_full="true"
+							style="height:30%"
+							paging='{"type":"numberList","listCntPerPage":"10","totalCntKey":"selectTestNumList_totCnt","onPageClick":"MT_GRID_NUM.fn_search", "pageGroupItemMax":"10"}'
+							label="시연2  PagingGrid">
+				<table style="width: 100%">
+					<colgroup>
+							<col style="width:60px" mobileHide="true" hide="false" columnKey="status" thKey="H_STATUS" >
+							<col style="width:150px" mobileHide="false" hide="false" columnKey="TEST_PROP" thKey="H_TEST_PROP" >
+							<col style="" mobileHide="false" hide="false" columnKey="TEST_VALUE" thKey="H_TEST_VALUE" >
+							<col style="width:300px" mobileHide="true" hide="false" columnKey="TEST_DB" thKey="H_TEST_DB" >		
+							<col style="width:160px" mobileHide="true" hide="false" columnKey="TEST_DT" thKey="H_TEST_DT" >						
+					</colgroup>
+					<thead>
+						<tr>
+							<th scope="col" id="H_STATUS">상태</th>
+							<th scope="col" id="H_TEST_PROP">속성</th>
+							<th scope="col" id="H_TEST_VALUE">값</th>
+							<th scope="col" id="H_TEST_DB">설명 (editorMode='true')</th>
+							<th scope="col" id="H_TEST_DT">날짜</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td id="status" celltype="input" style="" readOnly="true" name="상태"></td>
+							<td excelIndex="1" id="TEST_PROP" celltype="input" style="text-align:left" name="속성" required="false" readOnly="true" ></td>
+							<td excelIndex="2" id="TEST_VALUE" celltype="input" style="text-align:left" name="값" readOnly="true"></td>
+							<td excelIndex="3" id="TEST_DB" celltype="input" style="" name="설명 (editorMode='true')"  required="true" editorMode="true" ></td>
+							<td excelIndex="4" id="TEST_DT" celltype="input" style="" required="true" name="날짜" readOnly="true" displayFunction="$m.longToDate"></td>
+						</tr>
+					</tbody>
+				</table>				
+		</moca-grid>
 </body>
 </html>

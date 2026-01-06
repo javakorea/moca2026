@@ -34,6 +34,7 @@ async function onMocaLoad() {
 	  		// 3. 이제 script 안 함수 사용 가능
 	  		if (window.onpageload) {
 	  			let divObjs = div.querySelectorAll('div[type="grid');
+	  			debugger;
 	  			for(let i=0; i<divObjs.length; i++){
 	  				new Grid(divObjs[i]);
 	  			}
