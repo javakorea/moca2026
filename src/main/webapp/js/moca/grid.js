@@ -1922,8 +1922,8 @@ const gridProto = {
 	    grd.getAttribute('selectedDetailView',2);
 	    
 	    var selectedRealRowIndex = grd.getAttribute("selectedRealRowIndex");
-	    var foundedRow = grd.find('tbody:first>tr[realrowindex='+selectedRealRowIndex+']');
-	    var tdArr = foundedRow.find('td');
+	    var foundedRow = grd.querySelector('tbody > tr[realrowindex="' + selectedRealRowIndex + '"]');
+	    var tdArr = foundedRow.querySelectorAll('td');
 	    this.removeCol(tdArr);
 	    var _html = '';
 	    
@@ -1943,9 +1943,9 @@ const gridProto = {
 	        _html +='           </tr> ';
 	        i = i+2;
 	    }
-	    grd.find('#gridDetail1').html('');
-	    grd.find('#gridDetail3').html('');  
-	    grd.find('#gridDetail2').html(_html);
+		grd.querySelector('#gridDetail1').innerHTML = '';
+        grd.querySelector('#gridDetail3').innerHTML = ''
+        grd.querySelector('#gridDetail2').innerHTML = _html;
 	    _thisObj.closest("div[type="+_type+"]").find(".gridDetail_body").css('display','block'); 
 	},
 	
@@ -1955,8 +1955,8 @@ const gridProto = {
 	    this._detailViewContentCopy(_thisObj);
 	    grd.getAttribute('selectedDetailView',3);
 	    var selectedRealRowIndex = grd.getAttribute("selectedRealRowIndex");
-	    var foundedRow = grd.find('tbody:first>tr[realrowindex='+selectedRealRowIndex+']');
-	    var tdArr = foundedRow.find('td');
+	    var foundedRow = grd.querySelector('tbody > tr[realrowindex="' + selectedRealRowIndex + '"]');
+	    var tdArr = foundedRow.querySelectorAll('td');
 	    this.removeCol(tdArr);
 	    var _html = '';
 	    for(var i=0;i < tdArr.length;){
@@ -1987,9 +1987,9 @@ const gridProto = {
 	        _html +='           </tr> ';
 	        i = i+1;
 	    }
-	    grd.find('#gridDetail1').html('');
-	    grd.find('#gridDetail2').html('');      
-	    grd.find('#gridDetail3').html(_html);
+		grd.querySelector('#gridDetail1').innerHTML = '';
+        grd.querySelector('#gridDetail2').innerHTML = ''
+        grd.querySelector('#gridDetail3').innerHTML = _html;
 	    _thisObj.closest("div[type="+_type+"]").find(".gridDetail_body").css('display','block');     
 	    
 	},
@@ -1998,17 +1998,17 @@ const gridProto = {
 	    var _html = '';
 	    var isContentEditable = false;
 	    var contents = '';
-		let ipt = aTd.querySelector('input');
+		let ipt = aTd.querySelector('input[type="text"');
 
-		if (ipt) {
+		if (ipt && !ipt.classList.contains('moca_select')) {
 		  isContentEditable = true;
 		  contents = ipt.value.replace(/\r?\n/g, '<br>');
 		} else {
 		  contents = aTd.innerHTML.replace(/\r?\n/g, '<br>');
 		}
 
-	    _html +='               <th><label id='+aTd.getAttribute("id")+'>'+aTd.getAttribute("name")+'</label></th> ';
-	    _html +='               <td><div contenteditable="'+isContentEditable+'" placeholder="">'+contents+'</div></td> ';
+	    _html +='               <th><label>'+aTd.getAttribute("name")+'</label></th> ';
+	    _html +='               <td><div id='+aTd.getAttribute("id")+' contenteditable="'+isContentEditable+'" placeholder="">'+contents+'</div></td> ';
 	    return _html;
 	},
 	
@@ -2049,12 +2049,10 @@ const gridProto = {
 		  for (var i = 0; i < tds.length; i++) {
 		    var aTd = tds[i];
 
-		    // jQuery: $(aTd).closest("tr")
 		    var aTr = aTd.closest('tr');
 
-		    // jQuery: $(aTd).find('div[contenteditable=true]')
 		    var aDiv = aTd.querySelector('div[contenteditable="true"]');
-
+			debugger;
 		    if (aDiv) {
 		      // jQuery: aDiv.html()
 		      var cont = aDiv.innerHTML;
