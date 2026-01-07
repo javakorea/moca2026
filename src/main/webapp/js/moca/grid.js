@@ -10,7 +10,6 @@ const gridProto = {
 	    ['renderGrid'];
 		let _divObj = this;
 	    var _id = _divObj.id;
-		debugger;
 	    var pageid = _divObj.getAttribute("pageid");
 	    var srcid = _divObj.getAttribute("srcid");
 	    com.getObj(_id,null,pageid,srcid);//id중복체크
@@ -958,7 +957,6 @@ const gridProto = {
            var list = _list;
            var jq_grd_2 = _grd;
            var ks = Object.keys(jq_grd_2.cellInfo);
-
            var filterArr = [];
            var filterThArr = [];
 		   var thArray = jq_grd_2.querySelectorAll('thead th[filterableId]');
@@ -981,9 +979,9 @@ const gridProto = {
                for(var k=0; k < filterArr.length; k++){
                    var tdId = filterArr[k];
                    var tdValue = row[tdId];
-                   //jq_grd_2[tdId]['filterableMap'][tdValue] = ($m.getNumber(jq_grd_2[tdId]['filterableMap'][tdValue])+1);
+                   jq_grd_2[tdId]['filterableMap'][tdValue] = (com.getNumber(jq_grd_2[tdId]['filterableMap'][tdValue])+1);
                    if(i == list.length-1){
-                       //jq_grd_2[tdId]['filterableMap'] = $m.sortObject(jq_grd_2[tdId]['filterableMap']);
+                       jq_grd_2[tdId]['filterableMap'] = com.sortObject(jq_grd_2[tdId]['filterableMap']);
                        jq_grd_2[tdId]['countableMap'] = {};
                        var m = jq_grd_2[tdId].filterableMap;
                        var keys = Object.keys(m);
@@ -1909,7 +1907,6 @@ const gridProto = {
 	        grd.querySelector('#gridDetail2').innerHTML = '';
 	        grd.querySelector('#gridDetail3').innerHTML = ''
 	        grd.querySelector('#gridDetail1').innerHTML = _html;
-			debugger;
 	        _thisObj.closest("div[type="+_type+"]").querySelector(".gridDetail_body").style.display = 'block'; 
 	    }else{
 	        com.alert("상세보기할 행을 선택하세요!");
@@ -2053,7 +2050,6 @@ const gridProto = {
 		    var aTr = aTd.closest('tr');
 
 		    var aDiv = aTd.querySelector('div[contenteditable="true"]');
-			debugger;
 		    if (aDiv) {
 		      // jQuery: aDiv.html()
 		      var cont = aDiv.innerHTML;
@@ -2802,14 +2798,13 @@ const gridProto = {
 
 	doFilterForSingle (_thisObj,_e,grd) {
 	    //첫적용
+		debugger;
 	    com.stopEvent(_e);
 	    var o = _thisObj.closest('TH');
 	    var _id = o.getAttribute('id');
 	    var itemTable = _thisObj.closest('.moca_grid_body').querySelectorAll(".itemTable[thid="+_id+"]");
 	    
-	    //if(itemTable.length == 0){
-	    //onScroll이벤트로 인해 오픈할때마다 새로그림
-	    if(true){
+	    if(itemTable.length == 0){
 	        var offsetBasisObj = _thisObj.closest('.moca_grid_body');
 	        var offsetBasisOffset = com.offset(offsetBasisObj);
 	        var reWidth = com.getSize(o).width;
@@ -2905,71 +2900,98 @@ const gridProto = {
 	        _thisObj.closest('.moca_grid_body').append(tmp);
 	        grd.itemTable = itemTable;
 	        
-	        itemTable = _thisObj.closest('.moca_grid_body').find(".itemTable[thid="+o.getAttribute('id')+"]");
-	        $(itemTable).find("input[type=checkbox][name=all_filterableCheck_"+_id+"]").off('click').on('click',function(){
-	            var arrJq =  $(this).closest('div').next().find('input[type=checkbox]');
-	            if(this.checked){
-	                arrJq.prop('checked',true);
-	                arrJq.closest('li').addClass('on');
-	            }else{
-	                arrJq.prop('checked',false);
-	                arrJq.closest('li').removeClass('on');
-	            }
-	        });     
+	        itemTable = _thisObj.closest('.moca_grid_body').querySelector(".itemTable[thid="+o.getAttribute('id')+"]");
+			var allCheckbox = itemTable.querySelector(
+			    "input[type=checkbox][name=all_filterableCheck_" + _id + "]"
+			);
 
-	        $(itemTable).find("input[type=checkbox][name=filterableCheck_"+_id+"]").off('click').on('click',function(){
-	            var ul = $(this).closest('ul');
-	            var arr_all = ul.find('input[type=checkbox]')
-	            var arr_checked = ul.find('input[type=checkbox]:checked');
-	            
-	            var allCheckbox = ul.prev().find("input[type=checkbox][name=all_filterableCheck_"+_id+"]");
-	            
-	            if(arr_all.length == arr_checked.length){
-	                allCheckbox.prop('checked',true);
-	                allCheckbox.prop('indeterminate',false);
-	            }else if(arr_all.length == 0){
-	                allCheckbox.prop('checked',false);
-	                allCheckbox.prop('indeterminate',false);
-	            }else{
-	                allCheckbox.prop('checked',false);
-	                if(arr_checked.length == 0){
-	                    allCheckbox.prop('indeterminate',false);
-	                }else{
-	                    allCheckbox.prop('indeterminate',true);
-	                }
-	            }
-	            $m.filterSetColor(this);
-	        });
+			if (allCheckbox) {
+			    allCheckbox.onclick = function (e) {
+			        var container = this.closest('div');
+			        if (!container) return;
+
+			        var next = container.nextElementSibling;
+			        if (!next) return;
+
+			        var checkboxes = next.querySelectorAll('input[type=checkbox]');
+
+			        checkboxes.forEach(function (cb) {
+			            cb.checked = allCheckbox.checked;
+			            var li = cb.closest('li');
+			            if (li) {
+			                li.classList.toggle('on', allCheckbox.checked);
+			            }
+			        });
+			    };
+			}
+    
+
+			var filterCheckboxes = itemTable.querySelectorAll(
+			    "input[type=checkbox][name=filterableCheck_" + _id + "]"
+			);
+
+			filterCheckboxes.forEach((cb) => {
+			    cb.onclick = () => {
+			        var ul = this.closest('ul');
+			        if (!ul) return;
+
+			        var all = ul.querySelectorAll('input[type=checkbox]');
+			        var checked = ul.querySelectorAll('input[type=checkbox]:checked');
+
+			        var allCheckbox = ul.previousElementSibling
+			            ? ul.previousElementSibling.querySelector(
+			                "input[type=checkbox][name=all_filterableCheck_" + _id + "]"
+			              )
+			            : null;
+
+			        if (!allCheckbox) return;
+
+			        if (all.length === checked.length) {
+			            allCheckbox.checked = true;
+			            allCheckbox.indeterminate = false;
+			        } else if (checked.length === 0) {
+			            allCheckbox.checked = false;
+			            allCheckbox.indeterminate = false;
+			        } else {
+			            allCheckbox.checked = false;
+			            allCheckbox.indeterminate = true;
+			        }
+
+			        // 기존 함수 유지
+			        this.filterSetColor(this);
+			    };
+			});
+			itemTable.style.position = 'fixed';
+			itemTable.style.width = reWidth + 'px';
+			let _offset = com.offset(offsetBasisObj)
+			//itemTable.style.top = (_offset.top + reJson.top + parseInt(reHeight, 10)) + 'px';
+			//itemTable.style.left = (_offset.left + reJson.left) + 'px';
+			itemTable.style.top = (reJson.top + parseInt(reHeight, 10)) + 'px';
+			itemTable.style.left = reJson.left + 'px';
+			itemTable.style.zIndex = '6200';
+
 	        
 	        
-	        itemTable.css('position','fixed');
-	        itemTable.width(reWidth+8);
-	        itemTable.css('top',(offsetBasisObj.scrollTop()+reJson.top+parseInt(reHeight))+'px');
-	        itemTable.css('left',(offsetBasisObj.scrollLeft()+reJson.left)+'px');
-	        itemTable.css('z-index','6200');
+	        var ul = itemTable.querySelector('.filterheader')?.nextElementSibling;
+	        var arr_all = ul.querySelector('input[type=checkbox]')
+	        var arr_checked = ul.querySelector('input[type=checkbox]:checked');
 	        
-	        
-	        var ul = itemTable.find('.filterheader').next();
-	        var arr_all = ul.find('input[type=checkbox]')
-	        var arr_checked = ul.find('input[type=checkbox]:checked');
-	        
-	        var allCheckbox = ul.prev().find("input[type=checkbox][name=all_filterableCheck_"+_id+"]");
+	        var allCheckbox = ul.previousElementSibling.querySelector("input[type=checkbox][name=all_filterableCheck_"+_id+"]");
 	        
 	        if(arr_all.length == arr_checked.length){
-	            allCheckbox.prop('checked',true);
-	            allCheckbox.prop('indeterminate',false);
+	            allCheckbox.checked = true;
+	            allCheckbox.indeterminate = false;
 	        }else if(arr_all.length == 0){
-	            allCheckbox.prop('checked',false);
-	            allCheckbox.prop('indeterminate',false);
+	            allCheckbox.checked =false;
+	            allCheckbox.indeterminate = false;
 	        }else{
-	            allCheckbox.prop('checked',false);
-	            allCheckbox.prop('indeterminate',true);
+	            allCheckbox.checked = false;
+	            allCheckbox.indeterminate = true;
 	        }
 	        
-	        $(itemTable).find('i').removeClass('fa-angle-double-down');
-	        $(itemTable).find('i').addClass('fa-angle-double-up');
-	        var grd = grd[0];
-	        var ul = $(itemTable).find('div.filterheader').next();
+	        itemTable.querySelector('i').classList.remove('fa-angle-double-down');
+	        itemTable.querySelector('i').classList.add('fa-angle-double-up');
+	        var ul = itemTable.querySelector('div.filterheader').nextElementSibling;
 	        var ul_top = com.offset(ul).top;
 	        var top_position = ul.getAttribute("top_position");
 	        
@@ -2977,21 +2999,18 @@ const gridProto = {
 	            ul.getAttribute("top_position",ul_top);
 	        }
 	        var h = com.offset(grd).top + com.getSize(grd).height - Number(ul.getAttribute("top_position"))-5;
-	        $(itemTable).find('div.filterheader').next().css('max-height',h+'px');
+	        itemTable.querySelector('div.filterheader').nextElementSibling.style["max-height"] = h+'px';
 	        
-	        
-	        //$('.itemTable').css('opacity',0.9);           
-	    }else{
-	        if(itemTable.css('display') != 'none'){
-	            itemTable.css('display','none');
-	        }else{
-	            this.filterClose();
-	            itemTable.css('display','block');
-	        }
-	    }
-	    itemTable.off("click").on('click',function(){
-	        com.stopEvent(event);
-	    });
+			// 기존 click 제거
+			itemTable.removeEventListener('click', ()=>{com.stopEvent(event)});
+			com.stopEvent(event);
+			// 새로 등록
+			itemTable.addEventListener('click', ()=>{com.stopEvent(event)});
+			
+	    } else{
+			itemTable.forEach(el => el.remove());
+		}
+		
 	},
 
 	getCellOriData (grd,rowIndex,colid){
@@ -3008,6 +3027,17 @@ const gridProto = {
 		  el.style.display = 'none';
 		});
     },
+	
+	filterSetColor (_thisObj){
+	    ['현재 그리드의 모든 필터를 제거합니다.']
+	    if(_thisObj.checked){
+	        if(!_thisObj.closest('li').classList.contains('on')){
+	            _thisObj.closest('li').classList.add('on');
+	        }
+	    }else{
+	        _thisObj.closest('li').classList.remove('on');
+	    }
+	},
 
 	doFilter (_thisObj) {
 		// _thisObj가 문자열이면 header id로 넘어온 케이스
@@ -3089,7 +3119,7 @@ const gridProto = {
 		                  ($m.getNumber(jq_grd_2[tdId]['filterableMap'][tdValue]) + 1);
 
 		                if (i === list.length - 1) {
-		                  jq_grd_2[tdId]['filterableMap'] = $m.sortObject(jq_grd_2[tdId]['filterableMap']);
+		                  jq_grd_2[tdId]['filterableMap'] = com.sortObject(jq_grd_2[tdId]['filterableMap']);
 		                  jq_grd_2[tdId]['countableMap'] = {};
 
 		                  var m = jq_grd_2[tdId].filterableMap;

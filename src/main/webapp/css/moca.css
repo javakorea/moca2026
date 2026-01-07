@@ -1399,3 +1399,19 @@ div[type="table"].moca_table_cont{table-layout:fixed; width:100%; position: rela
 
 div[innerclass="input_clipboard"]{position: absolute; opacity:0}
 
+.itemTable{outline: none; max-height: 119px; border: 1px solid #9a9ea8; border-top:0; border-radius: 2px; margin-top: 1px; box-shadow: 0px 3px 2px rgba(0,0,0,0.2); background:#fff; color:#333; min-width:130px}
+.itemTable > ul {position:relative; overflow-y: auto; max-height:89px; margin-top:51px; border-bottom:1px solid #bbb}
+.itemTable ul li{height:30px; line-height:30px; border-bottom:1px solid #bbb; background:#efefef}
+.itemTable ul li.on{background:#3f424a; color:#fff;}
+.itemTable ul li.on:hover{background:#273948; color:#fff;}
+.itemTable ul li:hover{background:#ddd;}
+.itemTable ul li label{display: inline-block; width: calc(100% - 20px); float: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap}
+.itemTable input[type='checkbox']{vertical-align:middle}
+.itemTable input[type='checkbox']:before {content: ''; width: 12px; height: 12px; display: inline-block; background: url(../images/ico_cbx.png) no-repeat 0 0; vertical-align:top}
+.itemTable input[type='checkbox']:checked:before{background-position:0 -12px}
+.itemTable input[type='checkbox'].allcheck:before {background-position:0 -84px}
+.itemTable input[type='checkbox'].allcheck:indeterminate:before{background-position:0 -108px}
+.itemTable input[type='checkbox'].allcheck:checked:before{background-position:0 -96px}
+.itemTable .moca_ibn_btn{right: 3px; border: 1px solid #fff; top: 4px; font-size: 11px; padding: 1px 4px; border-radius: 2px; color: #fff}
+.itemTable div.filterheader{height: 27px; padding-top: 4px; position: fixed; z-index: 1; background: #3f424a; width: inherit; border-bottom: 1px solid #fff; min-width:130px}
+.itemTable input[type='text']{ height: 21px; left: 2px; position: relative; top: 4px; right: 0; width: calc(100% - 6px); display:block}

@@ -292,6 +292,7 @@ const com = {
 	},
 	
 	offset(el) {
+	  if(!el) return;
 	  const rect = el.getBoundingClientRect();
 	  return {
 	    top: rect.top + window.pageYOffset,
@@ -832,5 +833,29 @@ const com = {
 	    return JSON.stringify(ar).replace(/\,|\"|\[|\]/g,'');
 	},
 
-
+	sortObject (o){
+	    ['object를 키 이름으로 정렬하여 반환']
+	    var sorted = {},
+	    key, a = [];
+	    // 키이름을 추출하여 배열에 집어넣음
+	    for (key in o) {
+	        if (o.hasOwnProperty(key)) a.push(key);
+	    }
+	    // 키이름 배열을 정렬
+	    a.sort();
+	    // 정렬된 키이름 배열을 이용하여 object 재구성
+	    for (key=0; key<a.length; key++) {
+	        sorted[a[key]] = o[a[key]];
+	    }
+	    return sorted;
+	},
+	
+	getNumber (_value){ 
+	    ['string을 숫자로 변환하기']
+	   if (isNaN(_value)) {
+	         return 0;
+	   }else{
+	       return Number(_value);
+	   }
+	},
 };
