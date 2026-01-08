@@ -2798,7 +2798,6 @@ const gridProto = {
 
 	doFilterForSingle (_thisObj,_e,grd) {
 	    //첫적용
-		debugger;
 	    com.stopEvent(_e);
 	    var o = _thisObj.closest('TH');
 	    var _id = o.getAttribute('id');
@@ -2881,11 +2880,11 @@ const gridProto = {
 	        _all += '</span>';
 	        _all += '<div class="fr">';
 	        if(grd[o.getAttribute("filterableId")].filterType != 'countableMap'){
-	            _all += '<button type="button" class="moca_ibn_btn mr3" onclick="'+_id+'.filterSort(this,\''+_id+'\',\''+o.getAttribute("filterableId")+'\')" style="">건수순</button>';
+	            _all += '<button type="button" class="moca_ibn_btn mr3" onclick="'+grd.id+'.filterSort(this,\''+_id+'\',\''+o.getAttribute("filterableId")+'\')" style="">건수순</button>';
 	        }else{
-	            _all += '<button type="button" class="moca_ibn_btn mr3" onclick="'+_id+'.filterAlpha(this,\''+_id+'\',\''+o.getAttribute("filterableId")+'\')" style="">가나다순</button>';
+	            _all += '<button type="button" class="moca_ibn_btn mr3" onclick="'+grd.id+'.filterAlpha(this,\''+_id+'\',\''+o.getAttribute("filterableId")+'\')" style="">가나다순</button>';
 	        }
-	        _all += '<button type="button" class="moca_ibn_btn mr3" onclick="'+_id+'.filterApply(this,\''+_id+'\',\''+o.getAttribute("filterableId")+'\')" style="">적용</button>'; 
+	        _all += '<button type="button" class="moca_ibn_btn mr3" onclick="'+grd.id+'.filterApply(this,\''+_id+'\',\''+o.getAttribute("filterableId")+'\')" style="">적용</button>'; 
 	        _all += '<button type="button" class="moca_ibn_btn mr3 bd0" onclick="'+_id+'.expand(this,\''+_id+'\',\''+o.getAttribute("filterableId")+'\')" style=""><i class="fas fa-angle-double-down"></i></button>';
 	        _all += '</div>';
 	        _all += '<input type="text" class="moca_input req" style="" value="" onkeyup="$m.realtimeSearch(this)" placeholder="검색어를 입력하세요">';
@@ -2995,8 +2994,9 @@ const gridProto = {
 	        var ul_top = com.offset(ul).top;
 	        var top_position = ul.getAttribute("top_position");
 	        
+			
 	        if(top_position == null){
-	            ul.getAttribute("top_position",ul_top);
+	            ul.setAttribute("top_position",ul_top);
 	        }
 	        var h = com.offset(grd).top + com.getSize(grd).height - Number(ul.getAttribute("top_position"))-5;
 	        itemTable.querySelector('div.filterheader').nextElementSibling.style["max-height"] = h+'px';
@@ -3200,13 +3200,13 @@ const gridProto = {
 	    delete grd[0]['filterMaxIdx'];
 	    grd[0]['filterIdx'] = {};
 	    grd[0].filter = {};
-	    var thArray = grd.find('thead:first th[filterableId]');
+	    var thArray = grd.querySelectorAll('thead:first th[filterableId]');
 	    for(var i=0; i < thArray.length; i++){
 	        var aTh = thArray[i];
 	        var hObj = $('#'+aTh.id);
 	        var filterableId = aTh.getAttribute("filterableId");
-	        hObj.find('.moca_grid_filter_btn').removeClass('multi');
-	        hObj.find('i').text('');
+	        hObj.querySelector('.moca_grid_filter_btn').classList.remove('multi');
+	        hObj.querySelector('i').text('');
 	        if(i == thArray.length-1){
 	            grd[0].filterMaxIdx = null;
 	        }
@@ -3341,20 +3341,20 @@ const gridProto = {
 	    var h;
 	    if(thisObj != null && thisObj.type != 'dblclick'){
 	        p = thisObj;
-	        o = $(thisObj);
-	        h = $(thisObj).closest('th')[0];
+	        o = thisObj;
+	        h = thisObj.closest('th');
 	    }else{
 	        p = this;
 	        o = p.querySelector('.moca_grid_sort_btn');
 	        h = p;
 	    }
-	    var grdo = com.getTypeObj(p)[0];
+	    var grdo = com.getTypeObj(p);
 	    com.stopEvent(event);
 	    var _divObj = grdo;
 	    
-	    var colArray = _divObj.querySelector('colgroup:first col');
+	    var colArray = _divObj.querySelectorAll('.moca_grid_body colgroup col');
 	    
-	    var thArray = _divObj.querySelector('thead th[id]');
+	    var thArray = _divObj.querySelectorAll('thead th[id]');
 	    var _thMap = {};
 	    for(var i=0; i < thArray.length; i++){
 	        var thObj = thArray[i];
@@ -3381,39 +3381,313 @@ const gridProto = {
 	    var dataArray = grdo.list;
 	    
 	    var returnArray;
-	    if(o.hasClass('sort_none')){
+	    if(o.classList.contains('sort_none')){
 	        //원본에서 sort시작시점! 서 원본상태를 clone을 떠둠!
 	        //grdo.sort_ori_list = dataArray.clone();
 	        grdo.sort_ori_list = dataArray;
 	    }
 
-	    if(o.hasClass('sort_none')){
+	    if(o.classList.contains('sort_none')){
 	        //오름차순 다 나 가
-	        returnArray = $m.arrayOrderFnc(dataArray,[colid], ["asc"]);
+	        returnArray = this.arrayOrderFnc(dataArray,[colid], ["asc"]);
 	        grdo.list = returnArray;
 	        
-	        $m.drawGrid_inside(grdo, returnArray);
-	        o.removeClass("sort_none");
-	        o.addClass("sort_asc");                 
-	    }else if(o.hasClass('sort_asc')){
+	        this.drawGrid_inside(grdo, returnArray);
+	        o.classList.remove("sort_none");
+	        o.classList.add("sort_asc");                 
+	    }else if(o.classList.contains('sort_asc')){
 	        //내림차순 가 나 다
-	        returnArray = $m.arrayOrderFnc(dataArray,[colid], ["desc"]);
+	        returnArray = this.arrayOrderFnc(dataArray,[colid], ["desc"]);
 	        grdo.list = returnArray;
-	        $m.drawGrid_inside(grdo, returnArray);
-	        o.removeClass("sort_asc");
-	        o.addClass("sort_desc");
-	    }else if(o.hasClass('sort_desc')){
+	        this.drawGrid_inside(grdo, returnArray);
+	        o.classList.remove("sort_asc");
+	        o.classList.add("sort_desc");
+	    }else if(o.classList.contains('sort_desc')){
 	        //원래대로
 	        returnArray = grdo.sort_ori_list;
 	        grdo.list = returnArray;
-	        $m.drawGrid_inside(grdo, returnArray);    
-	        o.removeClass("sort_desc");
-	        o.addClass("sort_none");                    
+	        this.drawGrid_inside(grdo, returnArray);    
+	        o.classList.remove("sort_desc");
+	        o.classList.add("sort_none");                    
 	    }
-	    $m.redrawGrid(grdo);//스크롤포시션 유지되면서 sort됨
+	    this.redrawGrid(grdo);//스크롤포시션 유지되면서 sort됨
 	    return false;       
 	},
 
+	filterSort (thisObj,_headerId,_tdId) {
+	    ['건수순으로 소트']
+	    var grd = thisObj.closest('div[type=grid]');
+	    var cm = grd[_tdId]['countableMap'];
+	    grd[_tdId]['filterableMap'] = cm;
+	    grd[_tdId].filterType = 'countableMap';
+		this.filterClose();
+	    document.querySelector('.itemTable').remove();
+	    this.doFilter(_headerId);
+	},
+	
+	filterAlpha (thisObj,_headerId,_tdId) {
+	    ['알파벳순으로 소트']
+	    var grd = thisObj.closest('div[type=grid]');
+	    var am = grd[_tdId]['alphabeticalMap'];
+	    grd[_tdId]['filterableMap'] = am;
+	    grd[_tdId].filterType = 'alphabeticalMap';
+	    this.filterClose();
+	    document.querySelector('.itemTable').remove();
+	    this.doFilter(_headerId);
+	},
+	
+	filterApply (thisObj,_headerId,_tdId) {
+	    ['멀티소트구현']
+	    var grd = thisObj.closest('div[type=grid]');
+	    if(grd.appliedFilterArr  == null){
+	        grd.appliedFilterArr = [];
+	    }
+	    if(grd.appliedFilterMap  == null){
+	        grd.appliedFilterMap = {}; 
+	    }
+	    if(grd['filterFull']  == null){
+	        grd['filterFull'] = {}; 
+	    }   
+
+	    grd['filter'][_headerId] = [...thisObj.closest('div.filterheader').nextElementSibling.querySelectorAll('li:not([style*="display: none"]) input[type=checkbox]:checked')].map(el => el.value).join(', ');
+	    grd['filterFull'][_headerId] = [...thisObj.closest('div.filterheader').nextElementSibling.querySelectorAll('li input[type=checkbox]')].map(el => el.value).join(', ');
+	    
+	    var loopLeng = 0;
+	    if(grd.appliedFilterMap[_headerId] == null){
+	        loopLeng = grd.appliedFilterArr.length;
+	    }else{
+	        loopLeng = grd.appliedFilterArr.length-1;//이미선택된 마지막 필터를 수정할때
+	    }
+	    for(var i=0; i < loopLeng; i++){
+	        var hId = grd.appliedFilterArr[i];
+	        var map = grd.appliedFilterMap[hId];
+	        grd.list = this.getFilteredListForFilter(grd.ori_list,map.tdId,map.checkedString);
+	    }
+	    
+	    var applyNumber = 1;
+	    var __list;
+	    if(grd.appliedFilterMap[_headerId] == null){
+	        grd.appliedFilterArr.push(_headerId);
+	    }
+	    if(grd['filterMaxIdx'] != null){
+	        if(grd['filterIdx'][_headerId] == null){
+	            applyNumber = ++grd['filterMaxIdx'];
+	        }else{
+	            applyNumber = grd['filterMaxIdx'];
+	        }
+	        if(applyNumber == 1){
+	            __list = grd.ori_list;
+	        }else{
+	            //__list = grd.list;//멀티필터시필요
+	            __list = grd.ori_list;
+	        }
+	    }else{
+	        __list = grd.ori_list;
+	    }
+	    grd.list = this.getFilteredListForFilter(__list,_tdId,grd['filter'][_headerId]);
+	    grd.appliedFilterMap[_headerId] = {'idx':applyNumber,'checkedString':grd['filter'][_headerId],'tdId':_tdId,'allCheckedString':grd['filterFull'][_headerId]};
+	    grd['filterMaxIdx'] = grd.appliedFilterMap[_headerId].idx;
+	    grd['filterIdx'] = {};
+	    grd['filterIdx'][_headerId] = grd.appliedFilterMap[_headerId].idx;
+	    
+	    /*
+	    var hObj = $('#'+_headerId);
+	    hObj.find('.moca_grid_filter_btn').addClass('multi');
+	    hObj.find('i').text(grd.appliedFilterMap[_headerId].idx);
+	    *///멀티필터시필요
+	    this.redrawGrid(grd);
+	    if(grd.list.length != grd.ori_list.length){
+	        var cnt = '<b class="txt_red">'+com.comma(grd.list.length)+'</b>'+'/'+com.comma(grd.ori_list.length);
+	        this.setTotalCnt(grd,cnt);
+	    }else{
+	        var cnt = grd.ori_list.length;
+	        this.setTotalCnt(grd,cnt);       
+	    }
+	},
+	
+	getFilteredListForFilter (_list,key,_val){
+	    ['응답객체를 리턴타입에 맞게 변환']
+	    var val = _val.split(',');
+	    var reObj =  _list.filter(function(jsonObj){
+	        if (_val.indexOf(jsonObj[key]) > -1){
+	            return true;
+	        }
+	        return false;
+	    });
+	    
+	    return reObj;
+	},
+	
+	redrawGrid (_grd){
+	    (document.querySelector('.itemTable'))?.remove()||"";//필터창 열린게 있으면 닫기
+	    if(_grd == null){
+	            var yscrollArr = $('.moca_scrollY_type1[pageid='+$m.pageId+'][srcid='+$m.srcId+']');
+	            for(var i=0,j=yscrollArr.length; i < j; i++){
+	                this.sFunction(yscrollArr[i]);
+	            }
+	    }else{
+	        var yscrollObj = _grd.querySelector('.moca_scrollY_type1');
+	            this.sFunction(yscrollObj);
+	    }
+	},
+	
+	arrayOrderFnc (dataArray, orderArray, type){
+	    let returnArray = [];
+
+	    let orderArraySize = 0;
+	    let orderArraySizeMax = orderArray.length;
+	    
+	    let subOrderCallBoolean = false;
+	    
+	    //1차 정렬
+	    returnArray = this.orderFnc(dataArray, orderArray[0], type[0]);
+	        
+	    
+	    //동일한 값이 있고 기준 컬럼 배열이 2개 이상일때 실행
+	    //중복 데이터 정렬용 배열 생성 sameDataArray
+	    //if(subOrderCallBoolean && orderArraySizeMax >= 2){
+	    if(orderArraySizeMax >= 2){
+	        //2차 정렬
+	        this.subOrderFnc(returnArray, orderArray, type);
+	        
+	    }
+	    
+	    return returnArray;
+	},
+
+	orderFnc (dataArray, orderStr, type){
+	    let returnArray = [];
+	    
+		
+		dataArray.forEach(item1 => {
+		    let tempCheckData = item1[orderStr];
+		    let orderIndex = 0;
+
+		    returnArray.forEach((item2, index2) => {
+		        let tempData = item2[orderStr];
+
+		        if (tempData === undefined) tempData = null;
+		        if (tempCheckData === undefined) tempCheckData = null;
+
+		        if (tempCheckData > tempData) {
+		            orderIndex = index2 + 1;
+		        }
+		    });
+
+		    returnArray.splice(orderIndex, 0, item1);
+		});
+
+	    if(type == "desc"){
+	        returnArray = returnArray.reverse();
+	    }
+	    
+	    return returnArray;
+	},
+
+	subOrderFnc (returnArray, orderArray, type){
+	    
+	    for(let orderIndex = 1 ; orderIndex < orderArray.length ; orderIndex++){
+	        
+	        let sameDataArray = [];
+	        let tempDataArray = [];
+	        let samDataStrArray  = [];  //정렬기준별 동일 데이터 임시저장용 배열
+	        
+	        for(let n =0;n < returnArray.length -1 ; n ++){
+	            
+	            let checkBoolean = false;
+	            let nowStrArray = [];
+	            let nextStrArray = [];
+	            
+	            for(let checkIndex =0 ; checkIndex < orderIndex; checkIndex++){
+	                nowStrArray.push(returnArray[n][orderArray[checkIndex]]);
+	                nextStrArray.push(returnArray[n+1][orderArray[checkIndex]]);
+	            }
+	            
+	            //기준컬럼 값이 같은 데이터만 확인
+	            for(let n1=0 ; n1 < nowStrArray.length; n1++){
+	                if(nowStrArray[n1] == nextStrArray[n1]){
+	                    checkBoolean = true;
+	                }else{
+	                    checkBoolean = false;
+	                    break;
+	                }
+	            }
+	            //마지막 기준 컬럼 값이 같은지 체크
+	            if(checkBoolean && nowStrArray[nowStrArray.length - 1] == nextStrArray[nextStrArray.length - 1]){
+	                samDataStrArray = nowStrArray;
+	                
+	                tempDataArray.push(returnArray[n]);
+	            }else{
+	                if(samDataStrArray.length > 0){
+	                    tempDataArray.push(returnArray[n]);
+	                    
+	                    let tempMap = {
+	                            matchData : samDataStrArray,
+	                            data : tempDataArray
+	                    } 
+	                    
+	                    sameDataArray.push(tempMap);
+	                    
+	                    samDataStrArray = [];
+	                    tempDataArray = [];
+	                }
+	    
+	            }
+	            
+	            if(returnArray.length - 2 == n && tempDataArray.length > 0){
+	                tempDataArray.push(returnArray[n+1]);
+	                
+	                let tempMap = {
+	                        matchData : samDataStrArray,
+	                        data : tempDataArray
+	                } 
+	                
+	                sameDataArray.push(tempMap);
+	            }
+	        
+	        }
+	        
+	        //재정렬할 데이터가 있으면 해당 배열 개수만큼 재정렬후 입력
+	    
+	        $.each(sameDataArray,function(index3, item3){
+	            let matchDataArray = sameDataArray[index3].matchData;
+	            let tempArray = $m.orderFnc(sameDataArray[index3].data, orderArray[orderIndex], type[orderIndex]);
+	            let checkBoolean = false;
+	            
+	            for(let n =0 ; n < returnArray.length ;n++){
+	                let nowDataArray = [];
+
+	                //현재 orderIndex 만큼 돌며 해당 컬럼에 매칭되는 데이터 저장
+	                for(let subOrderIndex =0 ; subOrderIndex <= orderIndex; subOrderIndex++){
+	                    nowDataArray.push(returnArray[n][orderArray[subOrderIndex]]);                
+	                }
+	                
+	                //기준컬럼 값이 같은 데이터만 확인
+	                for(let n1=0 ; n1 < matchDataArray.length; n1++){
+	                    if(matchDataArray[n1] == nowDataArray[n1]){
+	                        checkBoolean = true;
+	                    }else{
+	                        checkBoolean = false;
+	                        break;
+	                    }
+	                }
+	                //마지막 기준 컬럼 값이 같은지 체크
+	                if(checkBoolean && matchDataArray[matchDataArray.length - 1] == nowDataArray[matchDataArray.length - 1]){
+	                    //같은 값 만큼 배열 지우고 갯수만큼 다시 넣음
+	                    returnArray.splice(n, tempArray.length);
+	                
+	                    $.each(tempArray,function(index4, item4){
+	                        returnArray.splice(n + index4, 0, item4);
+	                    });
+	                    
+	                    break;
+	                }
+	            }
+	            
+	            
+	        });
+	    }
+	},
 }
 
 
