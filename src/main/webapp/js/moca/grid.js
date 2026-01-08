@@ -259,12 +259,12 @@ const gridProto = {
 	    
 	    if(paging.type == 'numberList'){
 	        _html += '<div class="moca_grid_paging" id="grid_paging">';
-	        _html += '<button type="button" class="first" onclick="$m.pagingFirst(this)"><span>첫 페이지로 이동</span></button>';
-	        _html += '<button type="button" class="prev" onclick="$m.pagingPrev(this)"><span>이전페이지로 이동</span></button>';
+	        _html += '<button type="button" class="first" onclick="'+_id+'.pagingFirst(this)"><span>첫 페이지로 이동</span></button>';
+	        _html += '<button type="button" class="prev" onclick="'+_id+'.pagingPrev(this)"><span>이전페이지로 이동</span></button>';
 	        _html += '<span class="num" id="numGrp">';
 	        _html += '</span>';
-	        _html += '<button type="button" class="next" onclick="$m.pagingNext(this)"><span>다음페이지로 이동</span></button>';
-	        _html += '<button type="button" class="last" onclick="$m.pagingLast(this)"><span>마지막 페이지로 이동</span></button>';
+	        _html += '<button type="button" class="next" onclick="'+_id+'.pagingNext(this)"><span>다음페이지로 이동</span></button>';
+	        _html += '<button type="button" class="last" onclick="'+_id+'.pagingLast(this)"><span>마지막 페이지로 이동</span></button>';
 	        _html += '</div>';
 	    }
 	    
@@ -536,8 +536,6 @@ const gridProto = {
 
 	},
 	
-	
-
 	renderGridToolbarCheckbox(x1Obj) {
 	    ['grid toolbar내 checkbox만들기'];
 	    var _html = '';
@@ -1760,16 +1758,76 @@ const gridProto = {
               grd = _grd;
           }
           grd.totalCnt = cnt;
-          /*if(com.getAttrObj(grd,'paging').type == 'numberList'){
-          	$m[_srcId].setNumberListCnt(grd,cnt);
-          }*/
+          if(com.getAttrObj(grd,'paging').type == 'numberList'){
+          	this.setNumberListCnt(grd,cnt);
+          }
 		  const el = grd.querySelector('.grid_total .txt_blue');
 		  if (el) {
 		    el.innerHTML = com.comma(cnt);
 		  }
    },
 	  
+   setNumberListCnt (_grd,cnt){
+          var grd;
+          if(typeof _grd == 'string'){
+              grd = $m.getObj(_grd,null,this.pageId,this.srcId);
+          }else{
+              grd = _grd;
+          }
+          var numListCnt = this.getNumListCnt(grd); //3 
+          var _onPageClick = com.getAttrObj(grd,'paging').onPageClick;
+          var _pageGroupItemMax = Number(com.getAttrObj(grd,'paging').pageGroupItemMax);
+          var _showItemCnt;
+          if(_pageGroupItemMax < numListCnt){
+          	//총리스트목록 - 보여질목록아이템갯수 0보다 크면 보여질아이템갯수로 보여주고 아닐경우 총리스트목록을보여준다.
+          	// var _showItemCnt = Math.ceil(numListCnt/_pagingItemCnt)+1;//3/2
+          	 _showItemCnt = _pageGroupItemMax;//3/2  
+          }else{
+          	 _showItemCnt = numListCnt;
+          }
+          var a = _grd.querySelector('.moca_grid_paging > .num');
+          var aTag = '';
+          var currentPage  = this.getCurrentPage(_grd);
+          
+          if(currentPage == null){
+      		currentPage = 1;
+      	}
+
+          var startPage = 0;
+          if(currentPage%_showItemCnt == 0){
+          	startPage = parseInt(currentPage/_showItemCnt-1)*_showItemCnt+1;
+          }else{
+          	startPage = parseInt(currentPage/_showItemCnt)*_showItemCnt+1;
+          }
+          
+          var lastPage = this.getNumListCnt(grd);
+   		for(var i=startPage; i < startPage+_showItemCnt; i++){ 
+          	var classon = '';
+          	if(currentPage == i){
+          		classon = 'class="on" title="현재위치"';
+          	}
+          	aTag += '<button type=\"button\" '+classon+' onclick=\"'+_grd.id+'.onPageClick(this,'+i+','+_onPageClick+')\" >'+i+'</button>';
+          	if(i == lastPage){
+           		break;
+           	}
+          };
+      	
+          return a.innerHTML = aTag;
+     },
 	  
+	 getNumListCnt (grd){
+     	var numListCnt = Math.ceil(grd.totalCnt/com.getAttrObj(grd,'paging').listCntPerPage);
+     	return numListCnt;
+     },
+	 
+	 getCurrentPage (_pageButtonOrGridObj){
+     	if(_pageButtonOrGridObj == null || _pageButtonOrGridObj.currentPage == null){
+     		return 1;
+     	}else{
+     		return _pageButtonOrGridObj.currentPage;
+     	}
+     },
+		 
 	setVirtualScroll (_grd){
 	    var _default_cell_height = this.getCellHeight(_grd);
 
@@ -2400,7 +2458,7 @@ const gridProto = {
 	                    if(v == null || v == 'null' || v == 'undefined'){
 	                        v = "";
 	                    }else{
-	                        if(v.length == 13 && $.isNumeric(v) && hkey != "FILE_ID"){
+	                        if(v.length == 13 && com.isNumeric(v) && hkey != "FILE_ID"){
 	                            v = com.longToDate(v);
 	                        }else if(hkey == "FILE_ID"){
 	                            v = ""+v+"_";
@@ -3688,6 +3746,63 @@ const gridProto = {
 	        });
 	    }
 	},
+	
+	pagingPrev (_pageButtonObj){
+    	var grd = _pageButtonObj.closest('[type=grid]');
+		var _prevP = Number(grd.querySelector('.moca_grid_paging > .num > button.on').innerText);
+		
+		if(_prevP == 1){
+			return;
+		}else{
+			var _currentP = _prevP-1;
+			grd.currentPage = _currentP;
+			var _onPageClick = com.getAttrObj(grd,'paging').onPageClick;
+			this.onPageClick(_pageButtonObj,grd.currentPage,_onPageClick);
+		}
+    },
+    
+    pagingNext (_pageButtonObj){
+    	var grd = _pageButtonObj.closest('[type=grid]');
+    	var lastPage = this.getNumListCnt(grd);
+		var _prevP = Number(grd.querySelector('.moca_grid_paging > .num > button.on').innerText);
+		
+		if(_prevP == lastPage){
+			return;
+		}else{
+			var _currentP = _prevP+1;
+			grd.currentPage = _currentP;
+			var _onPageClick = com.getAttrObj(grd,'paging').onPageClick;
+			this.onPageClick(_pageButtonObj,grd.currentPage,_onPageClick);
+		}
+    },
+	
+    pagingLast (_pageButtonObj){
+    	var grd = _pageButtonObj.closest('[type=grid]');
+    	var lastPage = this.getNumListCnt(grd);
+    	var _prevP = Number(grd.querySelector('.moca_grid_paging > .num > button.on').innerText);
+		if(_prevP == lastPage){
+			return;
+		}else{
+			var _onPageClick = com.getAttrObj(grd,'paging').onPageClick;
+			this.onPageClick(_pageButtonObj,lastPage,_onPageClick);
+		}
+    },
+	
+	onPageClick (_thisPageBtnObj,pageNum,onPageClickFunctionStr){
+    	var beforePage = this.getCurrentPage(_thisPageBtnObj);
+    	var currentPage = pageNum;
+    	var grd = _thisPageBtnObj.closest("[type=grid]");
+    	grd.currentPage = currentPage;
+    	eval(onPageClickFunctionStr)(pageNum);
+    	
+    	if(beforePage < currentPage){
+    		//페이지그룹이 넘어가는경우 우측
+    	}else{
+			debugger;
+        	_thisPageBtnObj.parentElement.querySelector('.on').classList.remove('on');
+        	_thisPageBtnObj.classList.add('on');
+    	}
+    },
 }
 
 

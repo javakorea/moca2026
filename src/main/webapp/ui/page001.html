@@ -13,13 +13,17 @@ function onpageload(){
 	},function(){
 		grd_13.draw(data.list1);
 		grd_comp.draw(data.list3);
-		grd_1.draw(data.list4);
+		grd_1.draw(data.list4, {"selectTestNumList":data.list4,"selectTestNumList_totCnt":38});
 	});
 };
 
 function grd_comp__onDblClick(e){
 	debugger;
 };
+
+function fn_search_num(){
+
+}
 
 </script>
 <body onpageload="onpageload">
@@ -150,7 +154,7 @@ function grd_comp__onDblClick(e){
 							toolbar_delrow="true"
 							toolbar_full="true"
 							style="height:30%"
-							paging='{"type":"numberList","listCntPerPage":"10","totalCntKey":"selectTestNumList_totCnt","onPageClick":"MT_GRID_NUM.fn_search", "pageGroupItemMax":"10"}'
+							paging='{"type":"numberList","listCntPerPage":"10","totalCntKey":"selectTestNumList_totCnt","onPageClick":"fn_search_num", "pageGroupItemMax":"10"}'
 							label="시연2  PagingGrid">
 				<table style="width: 100%">
 					<colgroup>

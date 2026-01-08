@@ -102,6 +102,27 @@ const com = {
       
 	},
 	
+	isNumeric (_val){
+		let _reVal = false;
+		if(_val !== null && _val !== '' && !isNaN(_val)) _reVal = true;
+		return _reVal;
+	},
+	  
+	longToDate (_longValue) {
+	    if(_longValue != null && _longValue.trim() != ''){
+	        var d = new Date(parseInt(_longValue));
+	        var nowtime = d.getFullYear()+"-";
+	        nowtime += (d.getMonth()+1)+"-";
+	        nowtime += (d.getDate())+" ";
+	        nowtime += (d.getHours())+":";
+	        nowtime += (d.getMinutes())+":";
+	        nowtime += (d.getSeconds());
+	        return nowtime;     
+	    }else{
+	        return "";
+	    }
+	},
+	
 	getType (_thisObj) {
 		var _type = null;
 
